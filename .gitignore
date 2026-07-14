@@ -1,0 +1,28 @@
+# Dependencias
+node_modules/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Allure
+allure-results/
+allure-report/
+
+# Sesión guardada
+storage/
+
+# Variables de entorno
+.env*
+!.env.example
+
+# Reportes
+reports/
+
+
+# MCP
+.playwright-mcp/
+.agents/

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@pages/*":      ["./pages/*"],
+      "@components/*": ["./components/*"],
+      "@helpers/*":    ["./helpers/*"],
+      "@fixtures":     ["./src/fixtures/index.ts"],
+      "@utils/*":      ["./utils/*"],
+      "@config/*":     ["./src/config/*"],
+      "@types":        ["./src/types/domain.ts"]
+    }
+  }
+}

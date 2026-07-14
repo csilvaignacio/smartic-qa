@@ -1,0 +1,36 @@
+{
+  "name": "qa-automation-smartic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:regression": "playwright test --grep @regression",
+    "test:master:headed": "playwright test --grep @master --headed",
+    "test:sanity:headed": "playwright test --grep @sanity --headed",
+    "allure:generate": "allure generate ./allure-results -o ./allure-report --clean",
+    "allure:open": "allure open ./allure-report",
+    "allure:report": "npm run allure:generate && npm run allure:open",
+    "test:qa": "dotenv -e .env.qa -- playwright test",
+    "test:dev": "dotenv -e .env.dev -- playwright test",
+    "test:headedqa": "dotenv -e .env.qa -- playwright test --headed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1",
+    "allure-playwright": "^3.9.0",
+    "dotenv-cli": "^11.0.0",
+    "exceljs": "^4.4.0",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "csv-parse": "^6.2.1",
+    "xlsx": "^0.18.5"
+  }
+}

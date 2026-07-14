@@ -1,0 +1,21 @@
+export const TIMEOUTS = {
+  report: 30_000,
+  toast:  5_000,
+} as const;
+
+
+//nombre de barra de pestañas "Ficha Colaborador"
+export const TAB_LIST_COLLABORATOR_PROFILE = {
+  DATOS_PERSONALES: "DATOS PERSONALES",
+  CONTRATO: "CONTRATO",
+  SINDICATO: "SINDICATO",
+  JORNADA: "JORNADA",
+  MARCACION: "MARCACIÓN",
+  ANALISIS_DIARIO: "ANALISIS DIARIO",
+  AGENDA: "AGENDA",
+  CARGO: "CARGO",
+  LOCA_ESTAB_FAENA: "LOCAL.ESTAB.FAENA",
+  ZONA: "ZONA",
+  ORGANIGRAMA: "ORGANIGRAMA",
+  CASINO: "CASINO"
+}
