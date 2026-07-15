@@ -22,7 +22,6 @@ storage/
 # Reportes
 reports/
 
-
 # MCP
 .playwright-mcp/
 .agents/
