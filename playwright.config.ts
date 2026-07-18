@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: [["html"], ["list"], ["allure-playwright"]],
 
   use: {
-    viewport: { width: 1920, height: 1080 },
+    viewport: { width: 1980, height: 1080 },
     baseURL: ENV.baseURL,
     locale: "es-CL",
     timezoneId: "America/Santiago",

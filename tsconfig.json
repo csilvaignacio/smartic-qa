@@ -2,16 +2,16 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "paths": {
-      "@pages/*":      ["./pages/*"],
-      "@components/*": ["./components/*"],
-      "@helpers/*":    ["./helpers/*"],
+      "@pages/*":      ["./src/pages/*"],
+      "@components/*": ["./src/components/*"],
+      "@helpers/*":    ["./src/helpers/*"],
       "@fixtures":     ["./src/fixtures/index.ts"],
-      "@utils/*":      ["./utils/*"],
+      "@utils/*":      ["./src/utils/*"],
       "@config/*":     ["./src/config/*"],
       "@types":        ["./src/types/domain.ts"]
     }
