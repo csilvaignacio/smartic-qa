@@ -29,10 +29,5 @@
     "exceljs": "^4.4.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^7.0.2"
-  },
-  "dependencies": {
-    "@faker-js/faker": "^10.4.0",
-    "csv-parse": "^6.2.1",
-    "xlsx": "^0.18.5"
   }
 }

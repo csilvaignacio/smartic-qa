@@ -10,7 +10,7 @@ export class AttendanceReportPage extends BaseReportDTPage {
   private readonly rutSelect = new NgSelect(this.page, "identification");
   private readonly startDate = new NbDatepicker(this.page, "startDate");
   private readonly endDate = new NbDatepicker(this.page, "endDate");
-  private readonly groupSearchLink = this.page.getByRole('paragraph',{name: 'Búsqueda grupal'});
+  private readonly groupSearchLink = this.page.getByRole('paragraph',{name: 'Búsqueda grupal'})
 
   
 
@@ -27,7 +27,6 @@ export class AttendanceReportPage extends BaseReportDTPage {
   async enterGroupSearchRut(rut: string | number): Promise<void> {
     await test.step(`Ingresando RUT ${rut}`, async () => {
       await this.groupSearchLink.click();
-      npm install --save-dev typescript
     });
   }
 
