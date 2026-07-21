@@ -10,9 +10,9 @@ export class NgSelect {
   async selectByText(text: string | number): Promise<void> {
     await this.container.click();
     await this.container.locator("input").fill(text.toString());
-    
-    const option = this.page.getByRole('option',{});
-    await expect(option).toBeVisible();
+
+    const option = this.page.getByRole('option');
+    await expect(option).toHaveCount(1);
     await option.first().click();
   }
 
