@@ -1,6 +1,7 @@
 // src/fixtures/index.ts
-import { expect } from "@playwright/test";
-import { reportesDTFixtures } from "./reportesDT.fixture";
+import { mergeTests, expect } from "@playwright/test";
+import { dtReportsFixtures } from "./reportesDT/dtReports.fixture";
+import { administrationFixtures } from "./asistencia/administration.fixture";
 
-export const test = reportesDTFixtures;
+export const test = mergeTests(dtReportsFixtures, administrationFixtures);
 export { expect };
