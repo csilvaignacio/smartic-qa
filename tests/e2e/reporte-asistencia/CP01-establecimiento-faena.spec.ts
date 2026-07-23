@@ -4,9 +4,9 @@ import { MENU_ROUTES } from "@config/menu-routes";
 import { TAB_LIST_COLLABORATOR_PROFILE } from '@config/constants';
 
 test.describe('@regression Reporte Asistencia DT - Validación Establecimiento/Faena', () => {
-    test('Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador', async ({ attendanceReport, sideMenu, collaboratorProfile }) => {  
-       
-      await test.step('Filtrar Reporte de Asistencia por RUT y rango de fechas', async () => {
+  test('Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador', async ({ attendanceReport, sideMenu, collaboratorProfile }) => {
+
+    await test.step('Filtrar Reporte de Asistencia por RUT y rango de fechas', async () => {
       await attendanceReport.enterRut(ENV.ruts.rutTest);
       await attendanceReport.selectStartDate('01-04-2026');
       await attendanceReport.selectEndDate('22-04-2026');
@@ -35,10 +35,8 @@ test.describe('@regression Reporte Asistencia DT - Validación Establecimiento/F
     await test.step('Cruzar datos: Establecimiento de Ficha Colaborador vs Reporte DT', () => {
       expect(
         estbFaenaEnFicha,
-        `Inconsistencia: Ficha Colaborador indica '${estbFaenaEnFicha}' pero Reporte DT indica '${estbFaenaEnReporte}'`
+        `Comparando Establecimiento/Faena — Ficha Colaborador: '${estbFaenaEnFicha}' vs Reporte DT: '${estbFaenaEnReporte}'`
       ).toEqual(estbFaenaEnReporte);
     });
-        
-
-    });
+  });
 }); 
