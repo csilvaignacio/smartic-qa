@@ -7,7 +7,7 @@ export abstract class BaseReportDTPage extends BasePage{
     readonly filterPanel = new FilterPanel(this.page);
     readonly pagination = new Pagination(this.page);
     private readonly reportDTFilterSection = this.page.locator('ngx-filter-report-dt');
-    
+
 
     constructor(page: Page){
         super(page)

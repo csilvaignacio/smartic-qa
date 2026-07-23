@@ -14,7 +14,8 @@
     "allure:report": "npm run allure:generate && npm run allure:open",
     "test:qa": "dotenv -e .env.qa -- playwright test",
     "test:dev": "dotenv -e .env.dev -- playwright test",
-    "test:headedqa": "dotenv -e .env.qa -- playwright test --headed"
+    "test:headedqa": "dotenv -e .env.qa -- playwright test --headed",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -26,11 +27,7 @@
     "allure-playwright": "^3.9.0",
     "dotenv-cli": "^11.0.0",
     "exceljs": "^4.4.0",
-    "tsconfig-paths": "^4.2.0"
-  },
-  "dependencies": {
-    "@faker-js/faker": "^10.4.0",
-    "csv-parse": "^6.2.1",
-    "xlsx": "^0.18.5"
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^7.0.2"
   }
 }

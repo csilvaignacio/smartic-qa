@@ -10,7 +10,7 @@ export class AttendanceReportPage extends BaseReportDTPage {
   private readonly rutSelect = new NgSelect(this.page, "identification");
   private readonly startDate = new NbDatepicker(this.page, "startDate");
   private readonly endDate = new NbDatepicker(this.page, "endDate");
-  
+
 
   constructor(page: Page, public readonly testInfo: TestInfo) {
     super(page);
@@ -60,7 +60,7 @@ export class AttendanceReportPage extends BaseReportDTPage {
     });
   }
 
-  async getAusenciaForFirstAsistenciaSi(): Promise<string> {
+  async getAusenciaForFirstAsistencia(): Promise<string> {
       return await test.step('Obtener Ausencia de la primera fila con Asistencia "Si"', async () => {
           await expect(this.page.locator('table')).toBeVisible();
           

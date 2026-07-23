@@ -11,13 +11,16 @@ export class SideMenuComponent extends BaseComponent{
     
     async navigateTo(path: readonly string[]) {
         await test.step(`Navegando a: ${path[path.length - 1]}`, async () => {
+            let scope = this.container!;
             for (const menuName of path) {
-                const menuLink = this.container!.locator(`a[title="${menuName}"]`).first();
+                const menuItem = scope.locator('li', { has: this.page.locator(`a[title="${menuName}"]`) });
+                const menuLink = menuItem.locator(`a[title="${menuName}"]`);
+
                 const isExpanded = await menuLink.getAttribute('aria-expanded');
-                
                 if (isExpanded !== 'true') {
                     await menuLink.click();
                 }
+                scope = menuItem.locator('ul.menu-items');
             }
         });
     }
