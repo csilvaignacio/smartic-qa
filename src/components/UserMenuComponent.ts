@@ -2,7 +2,7 @@ import { BasePage } from "@pages/BasePage";
 import { Page } from "@playwright/test";
 import { BaseComponent } from "./BaseComponent";
 
-export class UserMenuComponet extends BaseComponent{
+export class UserMenuComponent extends BaseComponent{
     
     private readonly userMenu = this.container!;
     private readonly btnSetPassword = this.page.getByTitle('Cambiar Contraseña');
