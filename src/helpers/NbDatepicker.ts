@@ -8,27 +8,15 @@ export class NbDatepicker {
   }
 
   async setDate(date: string): Promise<void> {
-    try{
-      await this.input.fill(date);
-      await this.page.locator("nb-card-body").click(); 
-    }catch{
-      throw new Error(`NbDatepicker [${this.id}] no pudo ingresar la fecha: ${date}`)
-    }
+    await this.input.fill(date);
+    await this.page.locator("nb-card-body").click();
   }
 
   async getValue(): Promise<string> {
-    try{
-      return (await this.input.inputValue()).trim();
-    }catch{
-      throw new Error(`NbDatepicker [${this.id}] no se encontro valor visible`)
-    }
+    return (await this.input.inputValue()).trim();
   }
 
   async clear(): Promise<void> {
-    try{
-      await this.input.clear();
-    }catch{
-      throw new Error(`NbDatepicker [${this.id}] no se pudo limpiar el campo correctamente`)
-    }
+    await this.input.clear();
   }
 }
