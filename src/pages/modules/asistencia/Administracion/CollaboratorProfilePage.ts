@@ -10,7 +10,6 @@ export class CollaboratorProfilePage extends BasePage{
     private readonly editButton =  this.page.getByRole('button',{name: 'editar'});
     readonly filterPanel = new FilterPanel(this.page);
 
-    private readonly markingDateField = this.page.getByRole('textbox', {name: 'Fecha de Marcación'})
 
     constructor(page: Page){
         super(page)
@@ -78,8 +77,6 @@ export class CollaboratorProfilePage extends BasePage{
 
     // ANALISIS DIARIO
 
-    async markingDateEntered(): Promise<void>{
-        
-    }
+    
 
 }
