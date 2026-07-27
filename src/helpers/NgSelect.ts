@@ -11,12 +11,13 @@ export class NgSelect {
     await this.container.click();
 
     await expect(async () => {
-      await this.container.locator("input").fill(text.toString());
+      const input = this.container.locator("input");
+      await input.clear();
+      await input.pressSequentially(text.toString(), { delay: 100 });
       const option = this.page.getByRole('option');
       await expect(option).toHaveCount(1, { timeout: 3000 });
+      await option.first().click();
     }).toPass({ timeout: 15000 });
-
-    await this.page.getByRole('option').first().click();
   }
 
   async selectedText(): Promise<string> {

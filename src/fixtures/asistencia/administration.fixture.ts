@@ -1,5 +1,5 @@
 import { test as base } from "@playwright/test";
-import { CollaboratorProfilePage } from "@pages/modules/asistencia/Administracion/CollaboratorProfilePage";
+import { CollaboratorProfilePage } from "@pages/modules/asistencia/administracion/fichaColaborador/CollaboratorProfilePage";
 
 type AdministrationFixtures = {
   collaboratorProfile: CollaboratorProfilePage;

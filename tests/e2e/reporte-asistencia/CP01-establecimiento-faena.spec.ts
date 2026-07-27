@@ -30,7 +30,7 @@ test.describe('@regression Reporte Asistencia DT - Validación Establecimiento/F
     await collaboratorProfile.clickEditButton();
     await collaboratorProfile.enterTabList(TAB_LIST_COLLABORATOR_PROFILE.LOCA_ESTAB_FAENA);
 
-    const estbFaenaEnFicha = await collaboratorProfile.getAssignedEstabFaena();
+    const estbFaenaEnFicha = await collaboratorProfile.localEstabFaena.getAssignedEstabFaena();
 
     await test.step('Cruzar datos: Establecimiento de Ficha Colaborador vs Reporte DT', () => {
       expect(

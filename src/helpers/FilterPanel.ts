@@ -3,9 +3,15 @@ import { Page, test, Download } from "@playwright/test";
 export class FilterPanel {
   constructor(private page: Page) {}
 
+  async add(): Promise<void>{
+    await test.step('FilterPanel: click en +Nuevo', async () => {
+      await this.page.getByRole("button", { name: "Nuevo" }).dblclick();
+    });
+  }
+
   async search(): Promise<void> {
     await test.step('FilterPanel: click Buscar y esperar carga', async () => {
-      await this.page.getByRole("button", { name: "Buscar" }).dblclick();
+      await this.page.getByRole("button", { name: "Buscar" }).click();
     });
   }
 
