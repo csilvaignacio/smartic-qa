@@ -4,7 +4,7 @@ import { MENU_ROUTES } from "@config/menu-routes";
 import { TAB_LIST_COLLABORATOR_PROFILE } from '@config/constants';
 
 test.describe('@regression Reporte Asistencia DT - Validación Establecimiento/Faena', () => {
-  test('Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador', async ({ attendanceReport, sideMenu, collaboratorProfile }) => {
+  test('Validar dato de Establecimiento/Faena presente y coincide con Ficha Colaborador', async ({ attendanceReport, sideMenu, collaboratorProfile }) => {
 
     await test.step('Filtrar Reporte de Asistencia por RUT y rango de fechas', async () => {
       await attendanceReport.enterRut(ENV.ruts.rutTest);
