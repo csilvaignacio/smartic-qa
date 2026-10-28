@@ -1,0 +1,11 @@
+node_modules/
+reports/
+storage/
+.playwright-mcp/
+allure-results/
+allure-report/
+playwright-report/
+test-results/
+package-lock.json
+.claude/
+.husky/

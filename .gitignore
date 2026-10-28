@@ -1,16 +1,16 @@
 # Dependencias
 node_modules/
 
-# Playwright
+# Reportes y evidencias (Playwright, Allure, JUnit, trazas, videos)
+reports/
+
+# Rutas antiguas de reportes (antes de centralizarlos en reports/)
 /test-results/
 /playwright-report/
 /blob-report/
-/playwright/.cache/
-/playwright/.auth/
-
-# Allure
 allure-results/
 allure-report/
+/playwright/.cache/
 
 # Sesión guardada
 storage/
@@ -19,9 +19,14 @@ storage/
 .env*
 !.env.example
 
-# Reportes
-reports/
+# Editor (se versionan solo las recomendaciones compartidas)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 
-# MCP
+# Caché de ESLint
+.eslintcache
+
+# MCP / agentes
 .playwright-mcp/
 .agents/
