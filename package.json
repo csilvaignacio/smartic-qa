@@ -1,33 +1,69 @@
 {
   "name": "qa-automation-smartic",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Framework de automatización E2E para la plataforma SMARTIC (Playwright + TypeScript)",
+  "private": true,
   "scripts": {
     "test": "playwright test",
+    "test:qa": "dotenv -v AMBIENTE=qa -- playwright test",
+    "test:dev": "dotenv -v AMBIENTE=dev -- playwright test",
+    "test:qa:headed": "dotenv -v AMBIENTE=qa -- playwright test --headed",
     "test:headed": "playwright test --headed",
-    "test:regression": "playwright test --grep @regression",
-    "test:master:headed": "playwright test --grep @master --headed",
-    "test:sanity:headed": "playwright test --grep @sanity --headed",
-    "allure:generate": "allure generate ./allure-results -o ./allure-report --clean",
-    "allure:open": "allure open ./allure-report",
-    "allure:report": "npm run allure:generate && npm run allure:open",
-    "test:qa": "dotenv -e .env.qa -- playwright test",
-    "test:dev": "dotenv -e .env.dev -- playwright test",
-    "test:headedqa": "dotenv -e .env.qa -- playwright test --headed",
-    "typecheck": "tsc --noEmit"
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:regresion": "playwright test --grep @regresion",
+    "test:sanity": "playwright test --grep @sanity",
+    "test:master": "playwright test --grep @master",
+    "reporte:playwright": "playwright show-report reports/playwright-report",
+    "reporte:allure:generar": "allure generate reports/allure-results -o reports/allure-report --clean",
+    "reporte:allure:abrir": "allure open reports/allure-report",
+    "reporte:allure": "npm run reporte:allure:generar && npm run reporte:allure:abrir",
+    "limpiar:reportes": "rimraf reports",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "validar": "npm run typecheck && npm run lint && npm run format:check",
+    "prepare": "husky"
   },
-  "keywords": [],
+  "lint-staged": {
+    "*.{ts,mjs,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": "prettier --write"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "e2e",
+    "qa"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1",
+    "allure": "^3.21.0",
     "allure-playwright": "^3.9.0",
+    "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.12.1",
     "exceljs": "^4.4.0",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^7.0.2"
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "rimraf": "^6.1.3",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0"
   }
 }

@@ -1,42 +1,47 @@
-import { ENV } from '@config/env';
-import { test, expect } from '@fixtures';
-import { MENU_ROUTES } from "@config/menu-routes"; 
-import { TAB_LIST_COLLABORATOR_PROFILE } from '@config/constants';
+import { test, expect } from "@fixtures";
+import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
 
-test.describe('@regression Reporte Asistencia DT - Validación Establecimiento/Faena', () => {
-  test('Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador', async ({ attendanceReport, sideMenu, collaboratorProfile }) => {
+export const testData = {
+  rangoFechas: {
+    fechaInicio: "01-04-2026",
+    fechaTermino: "22-04-2026",
+  },
+  identificadorColaborador: "16283712",
+} as const;
 
-    await test.step('Filtrar Reporte de Asistencia por RUT y rango de fechas', async () => {
-      await attendanceReport.enterRut(ENV.ruts.rutTest);
-      await attendanceReport.selectStartDate('01-04-2026');
-      await attendanceReport.selectEndDate('22-04-2026');
-      await attendanceReport.filterPanel.search();
-      await attendanceReport.waitForResults();
+test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag: "@regresion" }, () => {
+  test("Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador", async ({
+    reporteAsistencia,
+    fichaColaborador,
+  }) => {
+    await reporteAsistencia.navegar();
+    await reporteAsistencia.filtrarPorRutYFechas(
+      testData.rangoFechas.fechaInicio,
+      testData.rangoFechas.fechaTermino,
+      testData.identificadorColaborador,
+    );
+    await reporteAsistencia.esperarResultados();
+
+    const estabFaenaEnReporte = await reporteAsistencia.obtenerEstablecimientoFaena();
+
+    await test.step("Validar que el Reporte DT contenga dato de Establecimiento/Faena", () => {
+      expect(
+        estabFaenaEnReporte,
+        "ERROR DE CONFIGURACIÓN: el Reporte DT no tiene dato en Establecimiento/Faena.",
+      ).not.toBe("");
     });
 
-    const estbFaenaEnReporte = await attendanceReport.getEstabFaena();
+    await fichaColaborador.navegar();
+    await fichaColaborador.buscarYEditarColaborador(testData.identificadorColaborador);
+    await fichaColaborador.abrirPestana(PESTANAS_FICHA_COLABORADOR.LOCAL_ESTAB_FAENA);
 
-    await test.step('Validar que el Reporte DT contenga dato de Establecimiento/Faena', () => {
+    const estabFaenaEnFicha = await fichaColaborador.obtenerEstablecimientoFaenaAsignado();
+
+    await test.step("Cruzar datos: Establecimiento de Ficha Colaborador vs Reporte DT", () => {
       expect(
-        estbFaenaEnReporte,
-        'ERROR DE CONFIGURACIÓN: el Reporte DT no tiene dato en Establecimiento/Faena.'
-      ).not.toBe('');
-    });
-
-    await sideMenu.navigateTo(MENU_ROUTES.ASISTENCIA_ADMIN_FICHA_COLABORADOR);
-    await collaboratorProfile.waitForVisible();
-    await collaboratorProfile.enterIdentifier(ENV.ruts.rutTest);
-    await collaboratorProfile.filterPanel.search();
-    await collaboratorProfile.clickEditButton();
-    await collaboratorProfile.enterTabList(TAB_LIST_COLLABORATOR_PROFILE.LOCA_ESTAB_FAENA);
-
-    const estbFaenaEnFicha = await collaboratorProfile.getAssignedEstabFaena();
-
-    await test.step('Cruzar datos: Establecimiento de Ficha Colaborador vs Reporte DT', () => {
-      expect(
-        estbFaenaEnFicha,
-        `Comparando Establecimiento/Faena — Ficha Colaborador: '${estbFaenaEnFicha}' vs Reporte DT: '${estbFaenaEnReporte}'`
-      ).toEqual(estbFaenaEnReporte);
+        estabFaenaEnFicha,
+        `Ficha Colaborador: '${estabFaenaEnFicha}' vs Reporte DT: '${estabFaenaEnReporte}'`,
+      ).toEqual(estabFaenaEnReporte);
     });
   });
-}); 
+});

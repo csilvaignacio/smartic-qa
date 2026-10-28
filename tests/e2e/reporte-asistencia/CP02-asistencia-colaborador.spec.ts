@@ -1,15 +1,27 @@
-import { ENV } from '@config/env';
-import { test, expect } from '@fixtures';
+import { test, expect } from "@fixtures";
 
-test.describe('@regression Reporte Asistencia DT - Validación Asistencia Colaborador', () => {
-  test('Asistencia SI con Ausencia vacia', async ({ attendanceReport }) => {
-    await attendanceReport.enterRut(ENV.ruts.rutTest);
-    await attendanceReport.selectStartDate('01-04-2026');
-    await attendanceReport.selectEndDate('22-04-2026');
-    await attendanceReport.filterPanel.search();
+export const testData = {
+  rangoFechas: {
+    fechaInicio: "01-04-2026",
+    fechaTermino: "22-04-2026",
+  },
+  identificadorColaborador: "16283712",
+} as const;
 
-    const ausencia = await attendanceReport.getAusenciaForFirstAsistencia();
+test.describe("Reporte Asistencia DT - Validación Asistencia Colaborador", { tag: "@regresion" }, () => {
+  test("Asistencia SI con Ausencia vacía", async ({ reporteAsistencia }) => {
+    await reporteAsistencia.navegar();
+    await reporteAsistencia.filtrarPorRutYFechas(
+      testData.identificadorColaborador,
+      testData.rangoFechas.fechaInicio,
+      testData.rangoFechas.fechaTermino,
+    );
 
-    expect(ausencia,`Se esperaba que Ausencia estuviera vacia cuando Asistencia = SI, pero se encontro: '${ausencia}'`).toBe('');
+    const ausencia = await reporteAsistencia.obtenerAusenciaPrimeraAsistencia();
+
+    expect(
+      ausencia,
+      `Se esperaba Ausencia vacía cuando Asistencia = SI, pero se encontró: '${ausencia}'`,
+    ).toBe("");
   });
 });
