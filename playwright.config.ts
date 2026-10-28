@@ -1,39 +1,62 @@
-import { defineConfig, devices } from "@playwright/test";
-import { ENV } from "@config/env";
-require("tsconfig-paths/register");
+import { defineConfig, ReporterDescription } from "@playwright/test";
+import { ENTORNO } from "@config/entorno";
+import { RUTAS_SESION } from "@config/constantes";
+
+const enCI = !!process.env.CI;
+
+/** Todos los reportes y evidencias quedan dentro de `reports/`. */
+const CARPETA_REPORTES = "reports";
+
+const reportes: ReporterDescription[] = [
+  [enCI ? "dot" : "list"],
+  ["html", { outputFolder: `${CARPETA_REPORTES}/playwright-report`, open: "never" }],
+  [
+    "allure-playwright",
+    {
+      resultsDir: `${CARPETA_REPORTES}/allure-results`,
+      detail: true,
+      suiteTitle: true,
+      environmentInfo: { ambiente: ENTORNO.ambiente, urlBase: ENTORNO.urlBase },
+    },
+  ],
+  ["junit", { outputFile: `${CARPETA_REPORTES}/junit/resultados.xml` }],
+];
 
 export default defineConfig({
   testDir: "./tests",
+  outputDir: `${CARPETA_REPORTES}/test-results`,
   fullyParallel: true,
-  timeout: 60 * 1000,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: [["html"], ["list"], ["allure-playwright"]],
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
+  forbidOnly: enCI,
+  retries: enCI ? 2 : 0,
+  workers: enCI ? 1 : undefined,
+  reporter: reportes,
 
   use: {
+    baseURL: ENTORNO.urlBase,
     viewport: null,
-    launchOptions: {args: ['--start-maximized'],},
-    baseURL: ENV.baseURL,
+    launchOptions: { args: ["--start-maximized"] },
     locale: "es-CL",
     timezoneId: "America/Santiago",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
-    actionTimeout: 15000,
+    actionTimeout: 15_000,
+    navigationTimeout: 30_000,
   },
 
   projects: [
-    { name: "setup", testMatch: /auth\.setup\.ts/ },
+    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
       name: "e2e",
       dependencies: ["setup"],
-      use: { 
-        browserName: 'chromium',
-        storageState: "storage/admin.json" 
+      testMatch: /tests[\\/](e2e|smoke)[\\/].*\.spec\.ts/,
+      use: {
+        browserName: "chromium",
+        storageState: RUTAS_SESION.admin,
       },
-      testMatch: /tests\/(e2e|smoke)\/.*\.spec\.ts/,
     },
-    { name: "api", testMatch: /tests\/api\/.*\.spec\.ts/ },
+    { name: "api", testMatch: /tests[\\/]api[\\/].*\.spec\.ts/ },
   ],
 });
