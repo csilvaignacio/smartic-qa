@@ -6,7 +6,7 @@ export const datosPrueba = {
     fechaFin: "22-10-2026",
   },
   colaborador: "21042004",
-};
+} as const;
 
 test.describe("Pruebas reporte marcas rechazadas web", { tag: "@regresion" }, () => {
   test("CP01 - Rechazo por Marca sin Horario", async ({ marcasRechazadas }) => {
@@ -22,6 +22,12 @@ test.describe("Pruebas reporte marcas rechazadas web", { tag: "@regresion" }, ()
     );
     await marcasRechazadas.panelFiltros.buscar();
 
-    expect(true).toBe(true);
+    await marcasRechazadas.validarMarcaRechazada(datosPrueba.colaborador);
+    const motivoRechazo = await marcasRechazadas.obtenerMotivoRechazo(datosPrueba.colaborador);
+
+    expect(
+      motivoRechazo,
+      `Se esperaba un motivo de rechazo para el colaborador ${datosPrueba.colaborador}, pero se encontró: '${motivoRechazo}'`,
+    ).not.toBe("");
   });
 });
