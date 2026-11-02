@@ -16,9 +16,9 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
   }) => {
     await reporteAsistencia.navegar();
     await reporteAsistencia.filtrarPorRutYFechas(
+      testData.identificadorColaborador,
       testData.rangoFechas.fechaInicio,
       testData.rangoFechas.fechaTermino,
-      testData.identificadorColaborador,
     );
     await reporteAsistencia.esperarResultados();
 
