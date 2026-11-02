@@ -1,6 +1,6 @@
 import { test, expect } from "@fixtures";
 
-export const testData = {
+export const datosPrueba = {
   rangoFechas: {
     fechaInicio: "01-04-2026",
     fechaTermino: "22-04-2026",
@@ -12,9 +12,9 @@ test.describe("Reporte Asistencia DT - Validación Asistencia Colaborador", { ta
   test("Asistencia SI con Ausencia vacía", async ({ reporteAsistencia }) => {
     await reporteAsistencia.navegar();
     await reporteAsistencia.filtrarPorRutYFechas(
-      testData.identificadorColaborador,
-      testData.rangoFechas.fechaInicio,
-      testData.rangoFechas.fechaTermino,
+      datosPrueba.identificadorColaborador,
+      datosPrueba.rangoFechas.fechaInicio,
+      datosPrueba.rangoFechas.fechaTermino,
     );
 
     const ausencia = await reporteAsistencia.obtenerAusenciaPrimeraAsistencia();

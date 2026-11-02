@@ -1,7 +1,7 @@
 import { Locator, Page } from "@playwright/test";
 import { BaseComponent } from "@components/base.comp";
 
-export class BusquedaGrupalComp extends BaseComponent {
+export class BusquedaGrupalComponent extends BaseComponent {
   protected override readonly contenedor: Locator;
 
   constructor(page: Page) {
