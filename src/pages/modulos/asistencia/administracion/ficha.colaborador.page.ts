@@ -48,7 +48,8 @@ export class FichaColaboradorPage extends BaseModuloPage {
 
   async abrirPestana(nombre: PestanaFichaColaborador): Promise<void> {
     await test.step(`Abrir la pestaña: ${nombre}`, async () => {
-      await this.page.getByRole("link", { name: nombre }).click();
+      // Coincidencia exacta: "CONTRATO" también calza con el enlace del menú "Tipos de contrato"
+      await this.page.getByRole("link", { name: new RegExp(`^${nombre}$`, "i") }).click();
     });
   }
 
