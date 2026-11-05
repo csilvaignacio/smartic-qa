@@ -35,8 +35,9 @@ export default defineConfig({
 
   use: {
     baseURL: ENTORNO.urlBase,
-    viewport: null,
-    launchOptions: { args: ["--start-maximized"] },
+    // Viewport fijo: en headless y en modo UI no hay ventana real que maximizar,
+    // y el sitio colapsa el menú lateral con el tamaño por defecto.
+    viewport: { width: 1440, height: 900 },
     locale: "es-CL",
     timezoneId: "America/Santiago",
     trace: "on-first-retry",

@@ -1,7 +1,7 @@
 import { test, expect } from "@fixtures";
 import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
 
-export const testData = {
+export const datosPrueba = {
   rangoFechas: {
     fechaInicio: "01-04-2026",
     fechaTermino: "22-04-2026",
@@ -16,9 +16,9 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
   }) => {
     await reporteAsistencia.navegar();
     await reporteAsistencia.filtrarPorRutYFechas(
-      testData.rangoFechas.fechaInicio,
-      testData.rangoFechas.fechaTermino,
-      testData.identificadorColaborador,
+      datosPrueba.identificadorColaborador,
+      datosPrueba.rangoFechas.fechaInicio,
+      datosPrueba.rangoFechas.fechaTermino,
     );
     await reporteAsistencia.esperarResultados();
 
@@ -32,7 +32,7 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
     });
 
     await fichaColaborador.navegar();
-    await fichaColaborador.buscarYEditarColaborador(testData.identificadorColaborador);
+    await fichaColaborador.buscarYEditarColaborador(datosPrueba.identificadorColaborador);
     await fichaColaborador.abrirPestana(PESTANAS_FICHA_COLABORADOR.LOCAL_ESTAB_FAENA);
 
     const estabFaenaEnFicha = await fichaColaborador.obtenerEstablecimientoFaenaAsignado();

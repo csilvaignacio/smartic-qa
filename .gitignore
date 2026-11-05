@@ -27,6 +27,9 @@ storage/
 # Caché de ESLint
 .eslintcache
 
-# MCP / agentes
+# MCP / agentes / Claude Code
 .playwright-mcp/
 .agents/
+.claude/
+skills-lock.json
+CLAUDE.md
