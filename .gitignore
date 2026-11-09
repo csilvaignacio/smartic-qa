@@ -5,7 +5,7 @@ node_modules/
 reports/
 
 # Rutas antiguas de reportes (antes de centralizarlos en reports/)
-/test-results/
+test-results/
 /playwright-report/
 /blob-report/
 allure-results/
@@ -24,8 +24,21 @@ storage/
 !.vscode/extensions.json
 !.vscode/settings.json
 
-# Caché de ESLint
+# Caché de ESLint y TypeScript
 .eslintcache
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales y descargas de las pruebas
+*.tmp
+downloads/
 
 # MCP / agentes / Claude Code
 .playwright-mcp/
@@ -33,3 +46,5 @@ storage/
 .claude/
 skills-lock.json
 CLAUDE.md
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
