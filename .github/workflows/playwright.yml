@@ -22,14 +22,16 @@ jobs:
     name: Tests E2E
     needs: calidad
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    # Fijo en 24.04: ubuntu-latest pasó a 26.04, que Playwright aún no soporta
+    runs-on: ubuntu-24.04
+    # Los secrets se leen del entorno "qa" de GitHub (Settings → Environments)
+    environment: qa
     env:
       AMBIENTE: qa
       BASE_URL: ${{ secrets.BASE_URL }}
       QA_EMAIL: ${{ secrets.QA_EMAIL }}
       QA_PASSWORD: ${{ secrets.QA_PASSWORD }}
       QA_COMPANY: ${{ secrets.QA_COMPANY }}
-      QA_RUT_PRUEBA1: ${{ secrets.QA_RUT_PRUEBA1 }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

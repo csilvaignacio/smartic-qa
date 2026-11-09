@@ -26,7 +26,4 @@ export const ENTORNO = {
   empresaPorDefecto: {
     nombre: obligatoria("QA_COMPANY"),
   },
-  ruts: {
-    rutPrueba: obligatoria("QA_RUT_PRUEBA1"),
-  },
 } as const;
