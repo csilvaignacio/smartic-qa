@@ -45,7 +45,6 @@ export class ReporteAsistenciaPage extends BaseReporteDTPage {
     });
   }
 
-  /** Atajo: completa RUT + rango de fechas y presiona Buscar. */
   async filtrarPorRutYFechas(rut: string, fechaInicio: string, fechaTermino: string): Promise<void> {
     await test.step("Filtrar reporte por RUT y rango de fechas", async () => {
       await this.ingresarRut(rut);

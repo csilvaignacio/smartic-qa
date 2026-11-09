@@ -15,9 +15,7 @@ const COLUMNAS_REPORTE = {
 
 export type MarcaRechazada = {
   identificador: string;
-  /** Fecha de la marca con formato `dd-mm-aaaa`. */
   fechaMarca: string;
-  /** Hora de la marca con formato `hh:mm:ss`. */
   horaMarca: string;
   motivoRechazo: string;
 };

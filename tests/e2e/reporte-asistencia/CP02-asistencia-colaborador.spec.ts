@@ -1,12 +1,7 @@
 import { test, expect } from "@fixtures";
+import datos from "@data/reporte.asistencia.json";
 
-export const datosPrueba = {
-  rangoFechas: {
-    fechaInicio: "01-04-2026",
-    fechaTermino: "22-04-2026",
-  },
-  identificadorColaborador: "16283712",
-} as const;
+const datosPrueba = datos.cp02;
 
 test.describe("Reporte Asistencia DT - Validación Asistencia Colaborador", { tag: "@regresion" }, () => {
   test("Asistencia SI con Ausencia vacía", async ({ reporteAsistencia }) => {

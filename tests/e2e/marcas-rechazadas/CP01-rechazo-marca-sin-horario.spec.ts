@@ -1,14 +1,9 @@
 import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
+import datos from "@data/marcas.rechazadas.json";
 import { expect, test } from "@fixtures";
 import { estaHoraEnAlgunHorario } from "@utils/fecha.util";
 
-const datosPrueba = {
-  rangoFechas: {
-    fechaInicio: "01-10-2026",
-    fechaFin: "31-10-2026",
-  },
-  motivoRechazo: "Marca sin horario",
-} as const;
+const datosPrueba = datos.cp01;
 
 test.describe("Marcas rechazadas - Rechazo por marca sin horario asignado", { tag: "@regresion" }, () => {
   test("CP01 - Rechazo por Marca sin Horario", async ({
@@ -29,7 +24,7 @@ test.describe("Marcas rechazadas - Rechazo por marca sin horario asignado", { ta
     await fichaColaborador.abrirPestana(PESTANAS_FICHA_COLABORADOR.CONTRATO);
 
     await test.step("Validar que el colaborador tiene un contrato vigente a la fecha de la marca", async () => {
-      const tieneContratoVigente = await fichaColaborador.tieneContratoVigente(marca.fechaMarca);
+      const tieneContratoVigente = await fichaColaborador.contrato.tieneVigente(marca.fechaMarca);
       expect(
         tieneContratoVigente,
         `Se esperaba un contrato vigente al ${marca.fechaMarca} para el colaborador ${marca.identificador}, pero no existe: el rechazo no corresponde a 'Marca sin horario'`,
@@ -37,7 +32,7 @@ test.describe("Marcas rechazadas - Rechazo por marca sin horario asignado", { ta
     });
 
     await fichaColaborador.abrirPestana(PESTANAS_FICHA_COLABORADOR.AGENDA);
-    const nombreCalendario = await fichaColaborador.obtenerCalendarioVigente(marca.fechaMarca);
+    const nombreCalendario = await fichaColaborador.agenda.obtenerCalendarioVigente(marca.fechaMarca);
 
     await calendarios.navegar();
     await calendarios.buscarPorNombre(nombreCalendario);

@@ -1,0 +1,37 @@
+{
+  "cp01": {
+    "rangoFechas": {
+      "fechaInicio": "01-10-2026",
+      "fechaFin": "31-10-2026"
+    },
+    "motivoRechazo": "Marca sin horario"
+  },
+  "cp02": {
+    "rangoFechas": {
+      "fechaInicio": "01-10-2026",
+      "fechaFin": "31-10-2026"
+    },
+    "motivoRechazo": "Marca sin calendario"
+  },
+  "cp03": {
+    "rangoFechas": {
+      "fechaInicio": "01-04-2026",
+      "fechaFin": "16-04-2026"
+    },
+    "motivoRechazo": "Marca sin contrato"
+  },
+  "cp04": {
+    "rangoFechas": {
+      "fechaInicio": "01-10-2026",
+      "fechaFin": "31-10-2026"
+    },
+    "motivoRechazo": "Marca fuera de turno"
+  },
+  "cp05": {
+    "rangoFechas": {
+      "fechaInicio": "01-04-2026",
+      "fechaFin": "16-04-2026"
+    },
+    "motivoRechazo": "Usuario inhabilitado"
+  }
+}

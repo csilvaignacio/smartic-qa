@@ -27,6 +27,15 @@ export function estaFechaEnRango(fecha: string, inicio: string, termino: string)
   return desdeInicio && hastaTermino;
 }
 
+/** Indica si la hora está entre inicio y fin (inclusive). Si el fin es menor, el rango cruza la medianoche. */
+export function estaHoraEnRango(hora: string, inicio: string, fin: string): boolean {
+  const minutosHora = convertirHoraAMinutos(hora);
+  const minutosInicio = convertirHoraAMinutos(inicio);
+  const minutosFin = convertirHoraAMinutos(fin);
+  if (minutosInicio <= minutosFin) return minutosHora >= minutosInicio && minutosHora <= minutosFin;
+  return minutosHora >= minutosInicio || minutosHora <= minutosFin;
+}
+
 /** Indica si la hora (`hh:mm` o `hh:mm:ss`) está dentro de alguno de los horarios `hh:mm-hh:mm`. */
 export function estaHoraEnAlgunHorario(hora: string, horarios: readonly string[]): boolean {
   const minutosMarca = convertirHoraAMinutos(hora);

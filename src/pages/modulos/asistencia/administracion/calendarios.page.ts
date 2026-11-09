@@ -63,6 +63,18 @@ export class CalendariosPage extends BaseModuloPage {
     });
   }
 
+  /** Nombre del único horario que el calendario en edición asigna a la fecha `dd-mm-aaaa`. */
+  async obtenerHorarioDelDia(fecha: string): Promise<string> {
+    const horarios = await this.obtenerHorariosDelDia(fecha);
+    const [horario] = horarios;
+    if (!horario || horarios.length > 1) {
+      throw new Error(
+        `Se esperaba un único horario asignado al ${fecha}, pero se encontraron ${horarios.length}: [${horarios.join(", ")}]`,
+      );
+    }
+    return horario;
+  }
+
   /** Celda del día dentro del mes que se está mostrando (excluye los días de relleno de otros meses). */
   private celdaDelMes(fechaIso: string): Locator {
     return this.calendario.locator(`td[data-date="${fechaIso}"]:not(.fc-day-other)`);

@@ -1,13 +1,8 @@
 import { test, expect } from "@fixtures";
 import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
+import datos from "@data/reporte.asistencia.json";
 
-export const datosPrueba = {
-  rangoFechas: {
-    fechaInicio: "01-04-2026",
-    fechaTermino: "22-04-2026",
-  },
-  identificadorColaborador: "16283712",
-} as const;
+const datosPrueba = datos.cp01;
 
 test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag: "@regresion" }, () => {
   test("Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador", async ({
@@ -35,7 +30,7 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
     await fichaColaborador.buscarYEditarColaborador(datosPrueba.identificadorColaborador);
     await fichaColaborador.abrirPestana(PESTANAS_FICHA_COLABORADOR.LOCAL_ESTAB_FAENA);
 
-    const estabFaenaEnFicha = await fichaColaborador.obtenerEstablecimientoFaenaAsignado();
+    const estabFaenaEnFicha = await fichaColaborador.localEstabFaena.obtenerAsignado();
 
     await test.step("Cruzar datos: Establecimiento de Ficha Colaborador vs Reporte DT", () => {
       expect(
