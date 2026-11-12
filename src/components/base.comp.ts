@@ -1,23 +1,20 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 /**
  * Base de todos los componentes de UI reutilizables.
- * `contenedor` es el elemento raíz del componente (opcional).
+ * `contenedor` es el elemento raíz: los locators del componente se anclan a él.
  */
 export abstract class BaseComponent {
-  protected readonly page: Page;
-  protected readonly contenedor?: Locator;
-
-  constructor(page: Page, contenedor?: Locator) {
-    this.page = page;
-    this.contenedor = contenedor;
-  }
+  constructor(
+    protected readonly page: Page,
+    protected readonly contenedor: Locator,
+  ) {}
 
   async estaVisible(): Promise<boolean> {
-    return this.contenedor ? await this.contenedor.isVisible() : false;
+    return await this.contenedor.isVisible();
   }
 
   async esperarVisible(): Promise<void> {
-    await this.contenedor?.waitFor({ state: "visible" });
+    await expect(this.contenedor).toBeVisible();
   }
 }

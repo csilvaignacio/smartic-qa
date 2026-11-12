@@ -1,36 +1,40 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, test } from "@playwright/test";
 import { BaseComponent } from "@components/base.comp";
 
+/** Panel "Búsqueda colaboradores" que se abre desde el enlace "Búsqueda grupal" de los reportes. */
 export class BusquedaGrupalComponent extends BaseComponent {
-  protected override readonly contenedor: Locator;
+  private readonly campoCriterio: Locator;
+  private readonly switchColaborador: Locator;
+  private readonly botonBuscar: Locator;
+  private readonly botonCerrar: Locator;
 
   constructor(page: Page) {
     // El panel se identifica por su título; las clases de Angular (ng-star-inserted) cambian solas
-    const contenedor = page.locator("nb-card").filter({
-      has: page.locator("nb-card-header", { hasText: "Búsqueda colaboradores" }),
+    super(
+      page,
+      page.locator("nb-card").filter({
+        has: page.locator("nb-card-header", { hasText: "Búsqueda colaboradores" }),
+      }),
+    );
+    this.campoCriterio = this.contenedor.locator("#firstName");
+    this.switchColaborador = this.contenedor.locator(".toggle-switcher");
+    this.botonBuscar = this.contenedor.locator("#search");
+    this.botonCerrar = this.contenedor.getByRole("button", { name: "Cerrar" });
+  }
+
+  /** Busca colaboradores por nombre o identificador dentro del panel. */
+  async buscar(criterio: string): Promise<void> {
+    await test.step(`Búsqueda grupal: buscar '${criterio}'`, async () => {
+      await this.campoCriterio.fill(criterio);
+      await this.botonBuscar.click();
     });
-    super(page, contenedor);
-    this.contenedor = contenedor;
-  }
-
-  override async esperarVisible(): Promise<void> {
-    await this.contenedor.waitFor({ state: "visible" });
-  }
-
-  /** Escribe el criterio de búsqueda (nombre o identificador del colaborador). */
-  async escribirBusqueda(criterio: string): Promise<void> {
-    await this.contenedor.locator("#firstName").fill(criterio);
   }
 
   async seleccionarColaborador(): Promise<void> {
-    await this.contenedor.locator(".toggle-switcher").click();
+    await this.switchColaborador.click();
   }
 
-  async buscar(): Promise<void> {
-    await this.contenedor.locator("#search").click();
-  }
-
-  async cerrarBusquedaGrupal(): Promise<void> {
-    await this.contenedor.getByRole("button", { name: "Cerrar" }).click();
+  async cerrar(): Promise<void> {
+    await this.botonCerrar.click();
   }
 }

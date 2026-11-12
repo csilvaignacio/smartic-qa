@@ -1,19 +1,26 @@
-import { Locator, Page, test } from "@playwright/test";
+import { Page, test } from "@playwright/test";
 import { BaseComponent } from "@components/base.comp";
-import { TIEMPOS_ESPERA } from "@config/constantes";
 import { TablaRegistros } from "@helpers/tabla.registros.util";
 import { estaFechaEnRango } from "@utils/fecha.util";
 
+/** Posición de cada columna en la tabla de la Agenda. */
+const COLUMNAS_AGENDA = {
+  fechaInicio: 0,
+  fechaTermino: 1,
+  tipoAnotacion: 2,
+  anotacion: 3,
+} as const;
+
+const TIPO_ANOTACION_CALENDARIO = "Calendario";
+
 /** Pestaña AGENDA de la Ficha Colaborador. */
 export class PestanaAgendaComponent extends BaseComponent {
-  protected override readonly contenedor: Locator;
   private readonly tabla: TablaRegistros;
 
   constructor(page: Page) {
-    const contenedor = page.locator("table").filter({ hasText: "Tipo Anotación" });
-    super(page, contenedor);
-    this.contenedor = contenedor;
-    this.tabla = new TablaRegistros(contenedor);
+    // Se ancla por un encabezado propio: todas las pestañas usan una <table> sin id
+    super(page, page.locator("table").filter({ hasText: "Tipo Anotación" }));
+    this.tabla = new TablaRegistros(this.contenedor);
   }
 
   /** Nombre de la anotación tipo "Calendario" cuya vigencia cubre la fecha (`dd-mm-aaaa`). */
@@ -23,8 +30,8 @@ export class PestanaAgendaComponent extends BaseComponent {
         throw new Error("La Agenda del colaborador no tiene registros");
       }
 
-      const calendario = await this.buscarCalendarioVigente(fecha);
-      if (!calendario) {
+      const calendario = await this.leerCalendarioVigente(fecha);
+      if (calendario === undefined) {
         throw new Error(`La Agenda del colaborador no tiene un calendario vigente al ${fecha}`);
       }
       return calendario;
@@ -35,35 +42,20 @@ export class PestanaAgendaComponent extends BaseComponent {
   async tieneCalendarioVigente(fecha: string): Promise<boolean> {
     return await test.step(`Verificar si existe un calendario vigente al ${fecha}`, async () => {
       if (!(await this.tabla.tieneFilas())) return false;
-      return (await this.buscarCalendarioVigente(fecha)) !== undefined;
+      return (await this.leerCalendarioVigente(fecha)) !== undefined;
     });
   }
 
-  private async buscarCalendarioVigente(fecha: string): Promise<string | undefined> {
-    const fechasInicio = await this.tabla.leerColumna(0);
-    const fechasTermino = await this.tabla.leerColumna(1);
-    const tipos = await this.tabla.leerColumna(2);
-    const anotaciones = await this.tabla.leerColumna(3);
+  private async leerCalendarioVigente(fecha: string): Promise<string | undefined> {
+    const fechasInicio = await this.tabla.leerColumna(COLUMNAS_AGENDA.fechaInicio);
+    const fechasTermino = await this.tabla.leerColumna(COLUMNAS_AGENDA.fechaTermino);
+    const tipos = await this.tabla.leerColumna(COLUMNAS_AGENDA.tipoAnotacion);
+    const anotaciones = await this.tabla.leerColumna(COLUMNAS_AGENDA.anotacion);
 
     const indice = fechasInicio.findIndex(
-      (inicio, i) => tipos[i] === "Calendario" && estaFechaEnRango(fecha, inicio, fechasTermino[i] ?? ""),
+      (inicio, i) =>
+        tipos[i] === TIPO_ANOTACION_CALENDARIO && estaFechaEnRango(fecha, inicio, fechasTermino[i] ?? ""),
     );
     return anotaciones[indice];
-  }
-
-  async tieneAnotacionCalendario(): Promise<boolean> {
-    return await test.step('Verificar si existe una anotación tipo "Calendario" en la Agenda', async () => {
-      const indiceColumnaAnotacion = 2;
-
-      const filaObjetivo = this.contenedor.locator("tbody tr").filter({
-        has: this.page.locator("td").nth(indiceColumnaAnotacion).filter({ hasText: "Calendario" }),
-      });
-      try {
-        await filaObjetivo.first().waitFor({ state: "attached", timeout: TIEMPOS_ESPERA.busquedaSelector });
-        return true;
-      } catch {
-        return false;
-      }
-    });
   }
 }

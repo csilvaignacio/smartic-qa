@@ -2,14 +2,11 @@ import { Locator, Page, test } from "@playwright/test";
 import { BaseComponent } from "@components/base.comp";
 
 export class MenuUsuarioComponent extends BaseComponent {
-  protected override readonly contenedor: Locator;
   private readonly botonCambiarClave: Locator;
   private readonly botonCerrarSesion: Locator;
 
   constructor(page: Page) {
-    const contenedor = page.locator("nb-user");
-    super(page, contenedor);
-    this.contenedor = contenedor;
+    super(page, page.locator("nb-user"));
     this.botonCambiarClave = page.getByTitle("Cambiar Contraseña");
     this.botonCerrarSesion = page.getByTitle("Cerrar sesión");
   }
