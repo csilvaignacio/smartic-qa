@@ -1,12 +1,22 @@
 export const TIEMPOS_ESPERA = {
-  reporte: 30_000,
-  notificacion: 5_000,
+  /** Respuesta del backend en reportes pesados: en QA la misma consulta varía entre 3 s y más de 80 s. */
+  reporte: 120_000,
+  /** Apertura de una edición (ficha, calendario, horario): con la suite en paralelo el backend supera los 10 s. */
+  cargaEdicion: 30_000,
+  /** Carga de listas, tablas y opciones que dependen de una búsqueda. */
   busquedaSelector: 15_000,
+  /** Cada intento dentro de un `toPass`: corto para reintentar rápido. */
+  intentoCorto: 3_000,
 } as const;
 
 /** Archivos donde se guarda la sesión autenticada (storageState). */
 export const RUTAS_SESION = {
   admin: "storage/admin.json",
+} as const;
+
+/** Fragmentos de las URL del backend que se esperan tras una búsqueda. */
+export const RUTAS_API = {
+  marcasRechazadas: "/report/transaction-rejects",
 } as const;
 
 /** Nombres de la barra de pestañas de "Ficha Colaborador". */

@@ -4,12 +4,18 @@ import { TIEMPOS_ESPERA } from "@config/constantes";
 /** Ayuda para operar el control `ng-select` de Angular (lista desplegable con búsqueda). */
 export class SelectorLista {
   private readonly contenedor: Locator;
+  private readonly campoBusqueda: Locator;
+  private readonly opciones: Locator;
+  // Clases propias de la librería ng-select (estables, no autogeneradas por Angular)
+  private readonly etiquetaSeleccionada: Locator;
+  private readonly botonLimpiar: Locator;
 
-  constructor(
-    private readonly page: Page,
-    id: string,
-  ) {
+  constructor(page: Page, id: string) {
     this.contenedor = page.locator(`ng-select[id="${id}"]`);
+    this.campoBusqueda = this.contenedor.locator("input");
+    this.opciones = page.getByRole("option");
+    this.etiquetaSeleccionada = this.contenedor.locator(".ng-value-label");
+    this.botonLimpiar = this.contenedor.locator(".ng-clear-wrapper");
   }
 
   /** Escribe el texto y reintenta hasta que quede una sola opción (mitiga búsquedas lentas). */
@@ -17,18 +23,18 @@ export class SelectorLista {
     await this.contenedor.click();
 
     await expect(async () => {
-      await this.contenedor.locator("input").fill(texto.toString());
-      await expect(this.page.getByRole("option")).toHaveCount(1, { timeout: 3_000 });
+      await this.campoBusqueda.fill(texto.toString());
+      await expect(this.opciones).toHaveCount(1, { timeout: TIEMPOS_ESPERA.intentoCorto });
     }).toPass({ timeout: TIEMPOS_ESPERA.busquedaSelector });
 
-    await this.page.getByRole("option").first().click();
+    await this.opciones.first().click();
   }
 
   async obtenerTextoSeleccionado(): Promise<string> {
-    return (await this.contenedor.locator(".ng-value-label").innerText()).trim();
+    return (await this.etiquetaSeleccionada.innerText()).trim();
   }
 
   async limpiar(): Promise<void> {
-    await this.contenedor.locator(".ng-clear-wrapper").click();
+    await this.botonLimpiar.click();
   }
 }
