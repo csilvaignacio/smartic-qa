@@ -1,6 +1,6 @@
 import { Page, test } from "@playwright/test";
 import { BaseComponent } from "@components/base.comp";
-import { TablaRegistros } from "@helpers/tabla.registros.util";
+import { TablaRegistros } from "@helpers/tabla.registros.helper";
 
 /** Posición de cada columna en la tabla de local, establecimiento o faena. */
 const COLUMNAS_LOCAL_ESTAB_FAENA = {

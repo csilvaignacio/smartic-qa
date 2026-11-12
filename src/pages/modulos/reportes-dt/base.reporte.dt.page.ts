@@ -1,7 +1,7 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseModuloPage } from "@pages/base.modulo.page";
-import { PanelFiltros } from "@helpers/panel.filtros.util";
-import { Paginacion } from "@helpers/paginacion.util";
+import { PanelFiltros } from "@helpers/panel.filtros.helper";
+import { Paginacion } from "@helpers/paginacion.helper";
 
 /** Base de los reportes del módulo "Reportes DT": todos comparten panel de filtros y paginación. */
 export abstract class BaseReporteDTPage extends BaseModuloPage {

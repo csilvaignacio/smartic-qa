@@ -1,9 +1,9 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseModuloPage } from "@pages/base.modulo.page";
 import { BusquedaGrupalComponent } from "@components/busqueda.grupal.comp";
-import { PanelFiltros } from "@helpers/panel.filtros.util";
-import { SelectorFecha } from "@helpers/selector.fecha.util";
-import { TablaRegistros } from "@helpers/tabla.registros.util";
+import { PanelFiltros } from "@helpers/panel.filtros.helper";
+import { SelectorFecha } from "@helpers/selector.fecha.helper";
+import { TablaRegistros } from "@helpers/tabla.registros.helper";
 import { RUTAS_API } from "@config/constantes";
 import { RUTAS_MENU } from "@config/rutas.menu";
 

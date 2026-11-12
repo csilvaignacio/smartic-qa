@@ -1,9 +1,9 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseModuloPage } from "@pages/base.modulo.page";
-import { PestanaAgendaComponent } from "@components/ficha.colaborador/pestana.agenda.comp";
-import { PestanaContratoComponent } from "@components/ficha.colaborador/pestana.contrato.comp";
-import { PestanaLocalEstabFaenaComponent } from "@components/ficha.colaborador/pestana.local.estab.faena.comp";
-import { PanelFiltros } from "@helpers/panel.filtros.util";
+import { PestanaAgendaComponent } from "@components/ficha-colaborador/pestana.agenda.comp";
+import { PestanaContratoComponent } from "@components/ficha-colaborador/pestana.contrato.comp";
+import { PestanaLocalEstabFaenaComponent } from "@components/ficha-colaborador/pestana.local.estab.faena.comp";
+import { PanelFiltros } from "@helpers/panel.filtros.helper";
 import { PestanaFichaColaborador, TIEMPOS_ESPERA } from "@config/constantes";
 import { RUTAS_MENU } from "@config/rutas.menu";
 import { textoExacto } from "@utils/texto.util";

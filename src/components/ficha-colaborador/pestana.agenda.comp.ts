@@ -1,6 +1,6 @@
 import { Page, test } from "@playwright/test";
 import { BaseComponent } from "@components/base.comp";
-import { TablaRegistros } from "@helpers/tabla.registros.util";
+import { TablaRegistros } from "@helpers/tabla.registros.helper";
 import { estaFechaEnRango } from "@utils/fecha.util";
 
 /** Posición de cada columna en la tabla de la Agenda. */

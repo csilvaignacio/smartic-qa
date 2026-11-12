@@ -1,7 +1,7 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseReporteDTPage } from "@pages/modulos/reportes-dt/base.reporte.dt.page";
-import { SelectorFecha } from "@helpers/selector.fecha.util";
-import { SelectorLista } from "@helpers/selector.lista.util";
+import { SelectorFecha } from "@helpers/selector.fecha.helper";
+import { SelectorLista } from "@helpers/selector.lista.helper";
 import { TIEMPOS_ESPERA } from "@config/constantes";
 import { RUTAS_MENU } from "@config/rutas.menu";
 
