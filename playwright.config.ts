@@ -1,6 +1,6 @@
 import { defineConfig, ReporterDescription } from "@playwright/test";
 import { ENTORNO } from "@config/entorno";
-import { RUTAS_SESION } from "@config/constantes";
+import { RUTAS_SESION } from "@config/rutas";
 
 const enCI = !!process.env.CI;
 

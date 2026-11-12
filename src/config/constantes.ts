@@ -9,16 +9,6 @@ export const TIEMPOS_ESPERA = {
   intentoCorto: 3_000,
 } as const;
 
-/** Archivos donde se guarda la sesión autenticada (storageState). */
-export const RUTAS_SESION = {
-  admin: "storage/admin.json",
-} as const;
-
-/** Fragmentos de las URL del backend que se esperan tras una búsqueda. */
-export const RUTAS_API = {
-  marcasRechazadas: "/report/transaction-rejects",
-} as const;
-
 /** Nombres de la barra de pestañas de "Ficha Colaborador". */
 export const PESTANAS_FICHA_COLABORADOR = {
   DATOS_PERSONALES: "DATOS PERSONALES",

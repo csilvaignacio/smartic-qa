@@ -1,6 +1,6 @@
 import { test as setup } from "@fixtures";
 import { ENTORNO } from "@config/entorno";
-import { RUTAS_SESION } from "@config/constantes";
+import { RUTAS_SESION } from "@config/rutas";
 
 setup("autenticar y entrar a la empresa", async ({ page, loginPage, seleccionEmpresa, menuLateral }) => {
   await page.goto(ENTORNO.urlBase);

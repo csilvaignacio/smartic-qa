@@ -1,3 +1,4 @@
+/** Rutas del menú lateral: cada arreglo es el camino de clics hasta la pantalla. */
 export const RUTAS_MENU = {
   // ---- Módulos Principales (1 Nivel) ----
   INICIO: ["Inicio"],
@@ -69,3 +70,13 @@ export const RUTAS_MENU = {
   ASISTENCIA_REPORTES_CONSULTA: ["Asistencia", "Reportes Personalizados", "Consulta reportes"],
 } as const;
 export type RutaMenu = (typeof RUTAS_MENU)[keyof typeof RUTAS_MENU];
+
+/** Archivos donde se guarda la sesión autenticada (storageState). */
+export const RUTAS_SESION = {
+  admin: "storage/admin.json",
+} as const;
+
+/** Fragmentos de las URL del backend que se esperan tras una búsqueda. */
+export const RUTAS_API = {
+  marcasRechazadas: "/report/transaction-rejects",
+} as const;

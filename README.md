@@ -18,8 +18,8 @@ qa-automation-smartic/
 ├── src/
 │   ├── config/                       # Configuración global
 │   │   ├── entorno.ts                # ENTORNO: variables de .env.<ambiente>
-│   │   ├── constantes.ts             # TIEMPOS_ESPERA, RUTAS_SESION, RUTAS_API, PESTANAS_*
-│   │   └── rutas.menu.ts             # RUTAS_MENU: rutas del menú lateral
+│   │   ├── constantes.ts             # TIEMPOS_ESPERA, PESTANAS_*
+│   │   └── rutas.ts                  # RUTAS_MENU, RUTAS_API, RUTAS_SESION: todas las rutas
 │   ├── data/                         # Datos de prueba: un JSON por pantalla, un bloque por caso
 │   │   ├── marcas.rechazadas.json
 │   │   └── reporte.asistencia.json

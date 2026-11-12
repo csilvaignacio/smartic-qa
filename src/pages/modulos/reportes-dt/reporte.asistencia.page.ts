@@ -3,7 +3,7 @@ import { BaseReporteDTPage } from "@pages/modulos/reportes-dt/base.reporte.dt.pa
 import { SelectorFecha } from "@helpers/selector.fecha.helper";
 import { SelectorLista } from "@helpers/selector.lista.helper";
 import { TIEMPOS_ESPERA } from "@config/constantes";
-import { RUTAS_MENU } from "@config/rutas.menu";
+import { RUTAS_MENU } from "@config/rutas";
 
 /** Posición de cada columna en la tabla del reporte. */
 const COLUMNAS_REPORTE = {

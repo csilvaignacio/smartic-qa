@@ -2,7 +2,7 @@ import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseModuloPage } from "@pages/base.modulo.page";
 import { PanelFiltros } from "@helpers/panel.filtros.helper";
 import { TIEMPOS_ESPERA } from "@config/constantes";
-import { RUTAS_MENU } from "@config/rutas.menu";
+import { RUTAS_MENU } from "@config/rutas";
 import { convertirFechaAIso } from "@utils/fecha.util";
 
 const MAXIMO_MESES_A_RECORRER = 36;

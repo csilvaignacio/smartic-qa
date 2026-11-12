@@ -5,7 +5,7 @@ import { PestanaContratoComponent } from "@components/ficha-colaborador/pestana.
 import { PestanaLocalEstabFaenaComponent } from "@components/ficha-colaborador/pestana.local.estab.faena.comp";
 import { PanelFiltros } from "@helpers/panel.filtros.helper";
 import { PestanaFichaColaborador, TIEMPOS_ESPERA } from "@config/constantes";
-import { RUTAS_MENU } from "@config/rutas.menu";
+import { RUTAS_MENU } from "@config/rutas";
 import { textoExacto } from "@utils/texto.util";
 
 export class FichaColaboradorPage extends BaseModuloPage {

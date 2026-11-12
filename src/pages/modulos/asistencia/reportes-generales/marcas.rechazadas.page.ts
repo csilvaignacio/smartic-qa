@@ -4,8 +4,7 @@ import { BusquedaGrupalComponent } from "@components/busqueda.grupal.comp";
 import { PanelFiltros } from "@helpers/panel.filtros.helper";
 import { SelectorFecha } from "@helpers/selector.fecha.helper";
 import { TablaRegistros } from "@helpers/tabla.registros.helper";
-import { RUTAS_API } from "@config/constantes";
-import { RUTAS_MENU } from "@config/rutas.menu";
+import { RUTAS_API, RUTAS_MENU } from "@config/rutas";
 
 /** Posición de cada columna en la tabla del reporte. */
 const COLUMNAS_REPORTE = {
