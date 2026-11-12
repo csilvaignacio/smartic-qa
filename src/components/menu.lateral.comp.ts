@@ -43,15 +43,18 @@ export class MenuLateralComponent extends BaseComponent {
   }
 
   /**
-   * Abre un grupo del menú sin cerrarlo por error: Angular puede expandir el grupo activo por su cuenta
-   * justo después de cargar, así que se reintenta hasta que quede `aria-expanded="true"`.
+   * Abre un grupo del menú solo si está cerrado y espera a que quede `aria-expanded="true"`.
+   * Cada intento espera largo: con el equipo cargado la página demora en reaccionar, y repetir el clic
+   * demasiado pronto alterna el grupo (abre y vuelve a cerrar). Solo se reintenta si de verdad no abrió.
    */
   private async expandir(enlace: Locator): Promise<void> {
     await expect(async () => {
       if ((await enlace.getAttribute("aria-expanded")) !== "true") {
         await enlace.click();
       }
-      await expect(enlace).toHaveAttribute("aria-expanded", "true", { timeout: TIEMPOS_ESPERA.intentoCorto });
-    }).toPass({ timeout: TIEMPOS_ESPERA.busquedaSelector });
+      await expect(enlace).toHaveAttribute("aria-expanded", "true", {
+        timeout: TIEMPOS_ESPERA.busquedaSelector,
+      });
+    }).toPass({ timeout: TIEMPOS_ESPERA.cargaEdicion });
   }
 }
