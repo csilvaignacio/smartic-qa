@@ -11,6 +11,8 @@ test.describe("Reporte Asistencia DT - Validación Asistencia Colaborador", { ta
       datosPrueba.rangoFechas.fechaInicio,
       datosPrueba.rangoFechas.fechaTermino,
     );
+    await reporteAsistencia.panelFiltros.buscar();
+    await reporteAsistencia.esperarResultados();
 
     const ausencia = await reporteAsistencia.obtenerAusenciaPrimeraAsistencia();
 

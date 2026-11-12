@@ -1,26 +1,32 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseReporteDTPage } from "@pages/modulos/reportes-dt/base.reporte.dt.page";
-import { SelectorLista } from "@helpers/selector.lista.util";
 import { SelectorFecha } from "@helpers/selector.fecha.util";
+import { SelectorLista } from "@helpers/selector.lista.util";
+import { TIEMPOS_ESPERA } from "@config/constantes";
 import { RUTAS_MENU } from "@config/rutas.menu";
+
+/** Posición de cada columna en la tabla del reporte. */
+const COLUMNAS_REPORTE = {
+  asistencia: 1,
+  ausencia: 2,
+} as const;
 
 export class ReporteAsistenciaPage extends BaseReporteDTPage {
   protected readonly rutaMenu = RUTAS_MENU.REPORTE_ASISTENCIA_DT;
 
-  // Filtros propios del reporte
   private readonly selectorRut: SelectorLista;
-  private readonly fechaInicio: SelectorFecha;
-  private readonly fechaTermino: SelectorFecha;
-
+  private readonly campoFechaInicio: SelectorFecha;
+  private readonly campoFechaTermino: SelectorFecha;
   private readonly tablaResultados: Locator;
   private readonly celdaEstablecimientoFaena: Locator;
 
   constructor(page: Page) {
     super(page);
     this.selectorRut = new SelectorLista(page, "identification");
-    this.fechaInicio = new SelectorFecha(page, "startDate");
-    this.fechaTermino = new SelectorFecha(page, "endDate");
+    this.campoFechaInicio = new SelectorFecha(page, "startDate");
+    this.campoFechaTermino = new SelectorFecha(page, "endDate");
     this.tablaResultados = page.locator("table");
+    // El dato viene como "Local, establecimiento o faena: <valor>" dentro de la cabecera del reporte
     this.celdaEstablecimientoFaena = page
       .locator("td b")
       .filter({ hasText: "Local, establecimiento" })
@@ -35,28 +41,28 @@ export class ReporteAsistenciaPage extends BaseReporteDTPage {
 
   async ingresarFechaInicio(fecha: string): Promise<void> {
     await test.step(`Ingresar fecha de inicio ${fecha}`, async () => {
-      await this.fechaInicio.ingresarFecha(fecha);
+      await this.campoFechaInicio.ingresarFecha(fecha);
     });
   }
 
   async ingresarFechaTermino(fecha: string): Promise<void> {
     await test.step(`Ingresar fecha de término ${fecha}`, async () => {
-      await this.fechaTermino.ingresarFecha(fecha);
+      await this.campoFechaTermino.ingresarFecha(fecha);
     });
   }
 
+  /** Atajo: llena RUT y rango de fechas. No pulsa Buscar: eso lo decide el spec. */
   async filtrarPorRutYFechas(rut: string, fechaInicio: string, fechaTermino: string): Promise<void> {
     await test.step("Filtrar reporte por RUT y rango de fechas", async () => {
       await this.ingresarRut(rut);
       await this.ingresarFechaInicio(fechaInicio);
       await this.ingresarFechaTermino(fechaTermino);
-      await this.panelFiltros.buscar();
     });
   }
 
   async esperarResultados(): Promise<void> {
     await test.step("Esperar que cargue la tabla de resultados", async () => {
-      await expect(this.celdaEstablecimientoFaena).toBeVisible();
+      await expect(this.celdaEstablecimientoFaena).toBeVisible({ timeout: TIEMPOS_ESPERA.reporte });
     });
   }
 
@@ -68,26 +74,27 @@ export class ReporteAsistenciaPage extends BaseReporteDTPage {
     });
   }
 
-  /** Devuelve el valor de "Ausencia" de la primera fila cuya "Asistencia" sea SI (en minúsculas). */
+  /** Devuelve el valor de "Ausencia" (en minúsculas) de la primera fila cuya "Asistencia" sea SI. */
   async obtenerAusenciaPrimeraAsistencia(): Promise<string> {
     return await test.step('Obtener Ausencia de la primera fila con Asistencia "SI"', async () => {
-      await expect(this.tablaResultados).toBeVisible();
-
-      const indiceColumnaAsistencia = 1;
-      const indiceColumnaAusencia = 2;
-
       const filaObjetivo = this.tablaResultados
         .locator("tbody tr")
         .filter({
-          has: this.page.locator("td").nth(indiceColumnaAsistencia).filter({ hasText: "SI" }),
+          // Regex completa y sensible a mayúsculas: `hasText: "SI"` también calzaría con "Sin" o "si"
+          has: this.page
+            .locator("td")
+            .nth(COLUMNAS_REPORTE.asistencia)
+            .filter({ hasText: /^\s*SI\s*$/ }),
         })
         .first();
 
-      if ((await filaObjetivo.count()) === 0) {
-        throw new Error("No se encontró ninguna fila en la tabla donde la Asistencia sea 'SI'.");
+      try {
+        await filaObjetivo.waitFor({ state: "visible", timeout: TIEMPOS_ESPERA.busquedaSelector });
+      } catch {
+        throw new Error("No se encontró ninguna fila en la tabla donde la Asistencia sea 'SI'");
       }
 
-      const valorAusencia = await filaObjetivo.locator("td").nth(indiceColumnaAusencia).innerText();
+      const valorAusencia = await filaObjetivo.locator("td").nth(COLUMNAS_REPORTE.ausencia).innerText();
       return valorAusencia.trim().toLowerCase();
     });
   }

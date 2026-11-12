@@ -5,7 +5,7 @@ import { ENTORNO } from "@config/entorno";
 
 /**
  * Base de las páginas que se abren desde el menú lateral.
- * Cada página hija declara su `rutaMenu` y obtiene gratis el método `abrir()`.
+ * Cada página hija declara su `rutaMenu` y obtiene gratis el método `navegar()`.
  */
 export abstract class BaseModuloPage extends BasePage {
   readonly menuLateral: MenuLateralComponent;

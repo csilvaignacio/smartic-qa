@@ -5,6 +5,9 @@ const datosPrueba = datos.cp05;
 
 test.describe("Marcas rechazadas - Rechazo por usuario inhabilitado", { tag: "@regresion" }, () => {
   test("CP05 - Rechazo por Usuario Inhabilitado", async ({ marcasRechazadas, fichaColaborador }) => {
+    // En QA el reporte de marcas rechazadas puede tardar más de un minuto en responder
+    test.slow();
+
     await marcasRechazadas.navegar();
     await marcasRechazadas.seleccionarRangoFechas(
       datosPrueba.rangoFechas.fechaInicio,
@@ -17,7 +20,7 @@ test.describe("Marcas rechazadas - Rechazo por usuario inhabilitado", { tag: "@r
     await fichaColaborador.buscarYEditarColaborador(marca.identificador);
 
     await test.step("Validar que el switch Habilitado del colaborador está apagado", async () => {
-      const estaHabilitado = await fichaColaborador.estaHabilitado(marca.identificador);
+      const estaHabilitado = await fichaColaborador.estaHabilitado();
       expect(
         estaHabilitado,
         `Se esperaba que el colaborador ${marca.identificador} estuviera inhabilitado, pero el switch 'Habilitado' está encendido: falso positivo`,

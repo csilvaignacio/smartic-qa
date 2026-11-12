@@ -1,10 +1,11 @@
-import { TIEMPOS_ESPERA } from "@config/constantes";
-import { RUTAS_MENU } from "@config/rutas.menu";
-import { BaseModuloPage } from "@pages/base.modulo.page";
 import { expect, Locator, Page, test } from "@playwright/test";
+import { BaseModuloPage } from "@pages/base.modulo.page";
+import { BusquedaGrupalComponent } from "@components/busqueda.grupal.comp";
 import { PanelFiltros } from "@helpers/panel.filtros.util";
 import { SelectorFecha } from "@helpers/selector.fecha.util";
-import { BusquedaGrupalComponent } from "@components/busqueda.grupal.comp";
+import { TablaRegistros } from "@helpers/tabla.registros.util";
+import { RUTAS_API } from "@config/constantes";
+import { RUTAS_MENU } from "@config/rutas.menu";
 
 /** Posición de cada columna en la tabla del reporte. */
 const COLUMNAS_REPORTE = {
@@ -21,45 +22,48 @@ export type MarcaRechazada = {
 };
 
 export class MarcasRechazadasPage extends BaseModuloPage {
-  protected override rutaMenu = RUTAS_MENU.ASISTENCIA_MARCAS_RECHAZADAS;
+  protected readonly rutaMenu = RUTAS_MENU.ASISTENCIA_MARCAS_RECHAZADAS;
 
-  private readonly contenedor: Locator;
   readonly panelFiltros: PanelFiltros;
   readonly busquedaGrupal: BusquedaGrupalComponent;
   private readonly campoFechaInicio: SelectorFecha;
   private readonly campoFechaFin: SelectorFecha;
   private readonly enlaceBusquedaGrupal: Locator;
   private readonly tablaResultados: Locator;
+  private readonly registros: TablaRegistros;
 
   constructor(page: Page) {
     super(page);
-    this.contenedor = page.locator("ngx-transaction-reject");
-    this.panelFiltros = new PanelFiltros(page);
+    // Con la ruta del backend, `panelFiltros.buscar()` espera la respuesta (en QA supera el minuto)
+    this.panelFiltros = new PanelFiltros(page, RUTAS_API.marcasRechazadas);
     this.busquedaGrupal = new BusquedaGrupalComponent(page);
     this.campoFechaInicio = new SelectorFecha(page, "startDate");
     this.campoFechaFin = new SelectorFecha(page, "endDate");
     this.enlaceBusquedaGrupal = page.getByText("Búsqueda grupal", { exact: true });
-    this.tablaResultados = this.contenedor.locator("table");
-  }
-
-  /** Fila de la tabla de resultados que corresponde al colaborador con ese identificador. */
-  private filaDelColaborador(identificador: string): Locator {
-    return this.tablaResultados.locator("tbody tr").filter({ hasText: identificador });
+    this.tablaResultados = page.locator("ngx-transaction-reject table");
+    this.registros = new TablaRegistros(this.tablaResultados);
   }
 
   async abrirBusquedaGrupal(): Promise<void> {
-    await this.enlaceBusquedaGrupal.click();
+    await test.step("Abrir la búsqueda grupal", async () => {
+      await this.enlaceBusquedaGrupal.click();
+      await this.busquedaGrupal.esperarVisible();
+    });
   }
 
   async seleccionarRangoFechas(fechaInicio: string, fechaFin: string): Promise<void> {
-    await this.campoFechaInicio.ingresarFecha(fechaInicio);
-    await this.campoFechaFin.ingresarFecha(fechaFin);
-    await this.contenedor.click();
+    await test.step(`Seleccionar rango de fechas ${fechaInicio} - ${fechaFin}`, async () => {
+      await this.campoFechaInicio.ingresarFecha(fechaInicio);
+      await this.campoFechaFin.ingresarFecha(fechaFin);
+    });
   }
 
   async validarMarcaRechazada(identificador: string): Promise<void> {
     await test.step(`Validar que exista una marca rechazada del colaborador ${identificador}`, async () => {
-      await expect(this.filaDelColaborador(identificador).first()).toBeVisible();
+      await expect(
+        this.filaDelColaborador(identificador).first(),
+        `Se esperaba al menos una marca rechazada del colaborador ${identificador} en el reporte`,
+      ).toBeVisible();
     });
   }
 
@@ -73,40 +77,41 @@ export class MarcasRechazadasPage extends BaseModuloPage {
     });
   }
 
-  /** Lee la primera marca del reporte cuyo motivo de rechazo coincide con el indicado. */
+  /** Lee la primera marca del reporte cuyo motivo de rechazo coincide exactamente con el indicado. */
   async obtenerMarcaRechazadaPorMotivo(motivoRechazo: string): Promise<MarcaRechazada> {
     return await test.step(`Obtener la primera marca rechazada con motivo '${motivoRechazo}'`, async () => {
-      const fila = this.tablaResultados
-        .locator("tbody tr")
-        .filter({
-          has: this.page.locator("td").nth(COLUMNAS_REPORTE.motivoRechazo).filter({ hasText: motivoRechazo }),
-        })
-        .first();
+      if (!(await this.registros.tieneFilas())) {
+        throw new Error("El reporte de marcas rechazadas no tiene registros en el rango buscado");
+      }
 
-      const hayFila = await fila.waitFor({ state: "visible", timeout: TIEMPOS_ESPERA.reporte }).then(
-        () => true,
-        () => false,
-      );
-      if (!hayFila) {
+      const motivos = await this.registros.leerColumna(COLUMNAS_REPORTE.motivoRechazo);
+      const indiceFila = motivos.indexOf(motivoRechazo);
+      if (indiceFila === -1) {
+        const motivosEncontrados = [...new Set(motivos)].join(", ");
         throw new Error(
-          `El reporte no tiene marcas rechazadas con motivo '${motivoRechazo}' en el rango buscado`,
+          `El reporte no tiene marcas rechazadas con motivo '${motivoRechazo}' en el rango buscado. Motivos encontrados: [${motivosEncontrados}]`,
         );
       }
 
-      const celdas = fila.locator("td");
-      const [fechaMarca, horaMarca] = (await celdas.nth(COLUMNAS_REPORTE.fechaMarca).innerText())
-        .trim()
-        .split(" ");
+      const fechaYHora = await this.registros.leerCelda(indiceFila, COLUMNAS_REPORTE.fechaMarca);
+      const [fechaMarca, horaMarca] = fechaYHora.split(" ");
       if (!fechaMarca || !horaMarca) {
-        throw new Error(`La fecha de la marca no tiene el formato 'dd-mm-aaaa hh:mm:ss'`);
+        throw new Error(`La fecha de la marca '${fechaYHora}' no tiene el formato 'dd-mm-aaaa hh:mm:ss'`);
       }
 
       return {
-        identificador: (await celdas.nth(COLUMNAS_REPORTE.identificador).innerText()).trim(),
+        identificador: await this.registros.leerCelda(indiceFila, COLUMNAS_REPORTE.identificador),
         fechaMarca,
         horaMarca,
         motivoRechazo,
       };
     });
+  }
+
+  /** Filas del colaborador: se compara la celda completa para no confundir "100101" con "1001010". */
+  private filaDelColaborador(identificador: string): Locator {
+    return this.tablaResultados
+      .locator("tbody tr")
+      .filter({ has: this.page.getByRole("cell", { name: identificador, exact: true }) });
   }
 }

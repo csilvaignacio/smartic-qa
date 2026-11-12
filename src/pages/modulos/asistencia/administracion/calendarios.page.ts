@@ -1,6 +1,7 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseModuloPage } from "@pages/base.modulo.page";
 import { PanelFiltros } from "@helpers/panel.filtros.util";
+import { TIEMPOS_ESPERA } from "@config/constantes";
 import { RUTAS_MENU } from "@config/rutas.menu";
 import { convertirFechaAIso } from "@utils/fecha.util";
 
@@ -12,11 +13,12 @@ export class CalendariosPage extends BaseModuloPage {
   readonly panelFiltros: PanelFiltros;
   private readonly encabezadoBusqueda: Locator;
   private readonly campoNombre: Locator;
-  private readonly tablaResultados: Locator;
+  private readonly filasResultados: Locator;
   private readonly calendario: Locator;
   // Clases propias de FullCalendar: la librería no ofrece roles ni textos estables en español
   private readonly botonMesAnterior: Locator;
   private readonly botonMesSiguiente: Locator;
+  private readonly primeraCeldaDelMes: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -24,10 +26,11 @@ export class CalendariosPage extends BaseModuloPage {
     this.encabezadoBusqueda = page.locator("nb-card-header", { hasText: "Búsqueda de calendario" });
     // Las etiquetas del formulario comparten el mismo `for`, por eso se ancla por el atributo `name`
     this.campoNombre = page.locator('input[name="description"]');
-    this.tablaResultados = page.locator("table");
+    this.filasResultados = page.locator("table tbody tr");
     this.calendario = page.locator("full-calendar");
     this.botonMesAnterior = this.calendario.locator(".fc-prev-button");
     this.botonMesSiguiente = this.calendario.locator(".fc-next-button");
+    this.primeraCeldaDelMes = this.calendario.locator("td[data-date]").first();
   }
 
   override async esperarVisible(): Promise<void> {
@@ -44,12 +47,15 @@ export class CalendariosPage extends BaseModuloPage {
     });
   }
 
-  /** Abre la edición del calendario cuyo nombre aparece en los resultados de la búsqueda. */
+  /** Abre la edición del calendario cuyo nombre coincide exactamente en los resultados de la búsqueda. */
   async editarCalendario(nombre: string): Promise<void> {
     await test.step(`Abrir la edición del calendario: ${nombre}`, async () => {
-      const fila = this.tablaResultados.locator("tbody tr").filter({ hasText: nombre });
-      await fila.getByRole("button", { name: "Editar" }).click();
-      await expect(this.calendario).toBeVisible();
+      await this.filasResultados
+        .filter({ has: this.page.getByRole("cell", { name: nombre, exact: true }) })
+        .getByRole("button", { name: "Editar" })
+        .click();
+      // Tras el clic los botones quedan deshabilitados mientras el backend arma la edición
+      await expect(this.calendario).toBeVisible({ timeout: TIEMPOS_ESPERA.cargaEdicion });
     });
   }
 
@@ -57,8 +63,9 @@ export class CalendariosPage extends BaseModuloPage {
   async obtenerHorariosDelDia(fecha: string): Promise<string[]> {
     return await test.step(`Obtener los horarios del calendario para el ${fecha}`, async () => {
       await this.irAlMesDe(fecha);
-      const celdaDelDia = this.celdaDelMes(convertirFechaAIso(fecha));
-      const horarios = await celdaDelDia.locator(".fc-event-title").allInnerTexts();
+      const horarios = await this.celdaDelMes(convertirFechaAIso(fecha))
+        .locator(".fc-event-title")
+        .allInnerTexts();
       return horarios.map((horario) => horario.trim());
     });
   }
@@ -83,17 +90,16 @@ export class CalendariosPage extends BaseModuloPage {
   /** Avanza o retrocede mes a mes hasta que el calendario muestre la fecha buscada. */
   private async irAlMesDe(fecha: string): Promise<void> {
     const fechaIso = convertirFechaAIso(fecha);
-    const primeraCelda = this.calendario.locator("td[data-date]").first();
-    await expect(primeraCelda).toBeVisible();
+    await expect(this.primeraCeldaDelMes).toBeVisible();
 
     for (let mes = 0; mes < MAXIMO_MESES_A_RECORRER; mes++) {
       if ((await this.celdaDelMes(fechaIso).count()) > 0) return;
 
-      const primeraFecha = (await primeraCelda.getAttribute("data-date")) ?? "";
+      const primeraFecha = (await this.primeraCeldaDelMes.getAttribute("data-date")) ?? "";
       const boton = fechaIso < primeraFecha ? this.botonMesAnterior : this.botonMesSiguiente;
       await boton.click();
       // Se espera el cambio de mes antes de decidir de nuevo, para no avanzar dos veces
-      await expect(primeraCelda).not.toHaveAttribute("data-date", primeraFecha);
+      await expect(this.primeraCeldaDelMes).not.toHaveAttribute("data-date", primeraFecha);
     }
     throw new Error(`No se pudo llegar al mes de ${fecha} en el calendario`);
   }

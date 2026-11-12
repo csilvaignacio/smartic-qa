@@ -6,6 +6,9 @@ const datosPrueba = datos.cp03;
 
 test.describe("Marcas rechazadas - Rechazo por marca sin contrato", { tag: "@regresion" }, () => {
   test("CP03 - Rechazo por Marca sin Contrato", async ({ marcasRechazadas, fichaColaborador }) => {
+    // En QA el reporte de marcas rechazadas puede tardar más de un minuto en responder
+    test.slow();
+
     await marcasRechazadas.navegar();
     await marcasRechazadas.seleccionarRangoFechas(
       datosPrueba.rangoFechas.fechaInicio,

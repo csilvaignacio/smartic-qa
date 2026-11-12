@@ -11,6 +11,9 @@ test.describe("Marcas rechazadas - Rechazo por marca sin horario asignado", { ta
     fichaColaborador,
     calendarios,
   }) => {
+    // En QA el reporte de marcas rechazadas puede tardar más de un minuto en responder
+    test.slow();
+
     await marcasRechazadas.navegar();
     await marcasRechazadas.seleccionarRangoFechas(
       datosPrueba.rangoFechas.fechaInicio,

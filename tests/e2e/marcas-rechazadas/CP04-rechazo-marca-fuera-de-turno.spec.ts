@@ -12,6 +12,9 @@ test.describe("Marcas rechazadas - Rechazo por marca fuera de turno", { tag: "@r
     calendarios,
     horarios,
   }) => {
+    // En QA el reporte de marcas rechazadas puede tardar más de un minuto en responder
+    test.slow();
+
     await marcasRechazadas.navegar();
     await marcasRechazadas.seleccionarRangoFechas(
       datosPrueba.rangoFechas.fechaInicio,
@@ -50,9 +53,7 @@ test.describe("Marcas rechazadas - Rechazo por marca fuera de turno", { tag: "@r
       const marcaDentroDelTurno = estaHoraEnRango(marca.horaMarca, inicio, fin);
       expect(
         marcaDentroDelTurno,
-        `Se esperaba que la marca del ${marca.fechaMarca}
-        a las ${marca.horaMarca} estuviera fuera del turno '${nombreHorario}' (${inicio}
-        a ${fin}), pero se encontró dentro: falso positivo`,
+        `Se esperaba que la marca del ${marca.fechaMarca} a las ${marca.horaMarca} estuviera fuera del turno '${nombreHorario}' (${inicio} a ${fin}), pero se encontró dentro: falso positivo`,
       ).toBe(false);
     });
   });

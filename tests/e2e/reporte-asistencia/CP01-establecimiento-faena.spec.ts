@@ -15,6 +15,7 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
       datosPrueba.rangoFechas.fechaInicio,
       datosPrueba.rangoFechas.fechaTermino,
     );
+    await reporteAsistencia.panelFiltros.buscar();
     await reporteAsistencia.esperarResultados();
 
     const estabFaenaEnReporte = await reporteAsistencia.obtenerEstablecimientoFaena();

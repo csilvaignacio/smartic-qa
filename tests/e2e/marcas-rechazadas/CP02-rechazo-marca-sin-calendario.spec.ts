@@ -6,11 +6,15 @@ const datosPrueba = datos.cp02;
 
 test.describe("Marcas rechazadas - Rechazo por marca sin calendario", { tag: "@regresion" }, () => {
   test("CP02 - Rechazo por Marca sin Calendario", async ({ marcasRechazadas, fichaColaborador }) => {
+    // En QA el reporte de marcas rechazadas puede tardar más de un minuto en responder
+    test.slow();
+
     await marcasRechazadas.navegar();
     await marcasRechazadas.seleccionarRangoFechas(
       datosPrueba.rangoFechas.fechaInicio,
       datosPrueba.rangoFechas.fechaFin,
     );
+
     await marcasRechazadas.panelFiltros.buscar();
     const marca = await marcasRechazadas.obtenerMarcaRechazadaPorMotivo(datosPrueba.motivoRechazo);
 

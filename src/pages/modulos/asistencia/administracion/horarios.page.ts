@@ -1,6 +1,7 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { BaseModuloPage } from "@pages/base.modulo.page";
 import { PanelFiltros } from "@helpers/panel.filtros.util";
+import { TIEMPOS_ESPERA } from "@config/constantes";
 import { RUTAS_MENU } from "@config/rutas.menu";
 
 export type RangoPeriodos = {
@@ -60,13 +61,14 @@ export class HorariosPage extends BaseModuloPage {
       }
 
       await filas.getByRole("button", { name: "Editar" }).click();
-      await expect(this.encabezadoEdicion).toBeVisible();
+      await expect(this.encabezadoEdicion).toBeVisible({ timeout: TIEMPOS_ESPERA.cargaEdicion });
     });
   }
 
   async abrirPeriodosHorarios(): Promise<void> {
     await test.step("Abrir el detalle de periodos horarios", async () => {
       await this.botonPeriodosHorarios.click();
+      // Los campos se pintan vacíos y luego se llenan: se espera el primer valor real
       await expect(this.camposInicioPeriodo.first()).not.toHaveValue("");
     });
   }
