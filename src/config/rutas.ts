@@ -78,5 +78,14 @@ export const RUTAS_SESION = {
 
 /** Fragmentos de las URL del backend que se esperan tras una búsqueda. */
 export const RUTAS_API = {
-  marcasRechazadas: "/report/transaction-rejects",
+  auth: {
+    login: "/login",
+  },
+  reportes: {
+    marcasRechazadas: "/report/transaction-rejects",
+  },
+  transacciones: {
+    crearSmartgate: "/services/transactions/smartgate",
+    eliminar: "/services/transactions/delete",
+  },
 } as const;

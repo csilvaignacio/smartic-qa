@@ -34,7 +34,7 @@ export class MarcasRechazadasPage extends BaseModuloPage {
   constructor(page: Page) {
     super(page);
     // Con la ruta del backend, `panelFiltros.buscar()` espera la respuesta (en QA supera el minuto)
-    this.panelFiltros = new PanelFiltros(page, RUTAS_API.marcasRechazadas);
+    this.panelFiltros = new PanelFiltros(page, RUTAS_API.reportes.marcasRechazadas);
     this.busquedaGrupal = new BusquedaGrupalComponent(page);
     this.campoFechaInicio = new SelectorFecha(page, "startDate");
     this.campoFechaFin = new SelectorFecha(page, "endDate");

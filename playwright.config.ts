@@ -58,6 +58,5 @@ export default defineConfig({
         storageState: RUTAS_SESION.admin,
       },
     },
-    { name: "api", testMatch: /tests[\\/]api[\\/].*\.spec\.ts/ },
   ],
 });
