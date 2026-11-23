@@ -1,6 +1,6 @@
-/** Rutas del menú lateral: cada arreglo es el camino de clics hasta la pantalla. */
+/** Rutas del menú lateral: el camino de clics hasta cada pantalla, con el texto exacto de cada enlace. */
 export const RUTAS_MENU = {
-  // ---- Módulos Principales (1 Nivel) ----
+  // Primer nivel
   INICIO: ["Inicio"],
   DOCUMENTACION: ["Documentación"],
   SELECCION_EMPRESA: ["Selección de empresa"],
@@ -12,12 +12,12 @@ export const RUTAS_MENU = {
   EVENT_TRACKER: ["Event Tracker"],
   MANTENEDOR_DOCUMENTACION: ["Mantenedor de documentación"],
 
-  // ---- Módulo Operaciones (2 Niveles) ----
+  // Operaciones
   OPERACIONES_ORDENES_VENTA: ["Operaciones", "Órdenes de venta"],
   OPERACIONES_HISTORIAL_VENTA: ["Operaciones", "Reporte historial de órdenes de venta"],
   OPERACIONES_CANTIDAD_TRABAJADORES: ["Operaciones", "Reporte de cantidad de trabajadores con marcación"],
 
-  // ---- Módulo Reportes DT (2 Niveles) ----
+  // Reportes DT
   REPORTE_ASISTENCIA_DT: ["Reportes DT", "Reporte asistencia"],
   REPORTE_JORNADA_DIARIA_DT: ["Reportes DT", "Reporte jornada diaria"],
   REPORTE_DOMINGOS_FESTIVOS_DT: ["Reportes DT", "Reporte de días domingo y/o días festivos"],
@@ -25,12 +25,12 @@ export const RUTAS_MENU = {
   REPORTE_DIARIO_DT: ["Reportes DT", "Reporte Diario"],
   REPORTE_ENTIDADES_EMPLEADORAS_DT: ["Reportes DT", "Reporte de entidades empleadoras"],
 
-  // Asistencia -> DVM
+  // Asistencia > DVM
   ASISTENCIA_DVM_ALERTAS: ["Asistencia", "DVM", "Alertas"],
   ASISTENCIA_DVM_VISUALIZADOR: ["Asistencia", "DVM", "Visualizador"],
   ASISTENCIA_DVM_CONFIG_ALERTAS: ["Asistencia", "DVM", "Configuración de alertas"],
 
-  // Asistencia -> Administración
+  // Asistencia > Administración
   ASISTENCIA_ADMIN_EMPRESA: ["Asistencia", "Administración", "Empresa"],
   ASISTENCIA_ADMIN_CARGOS: ["Asistencia", "Administración", "Cargos"],
   ASISTENCIA_ADMIN_TIPOS_CONTRATO: ["Asistencia", "Administración", "Tipos de contrato"],
@@ -48,7 +48,7 @@ export const RUTAS_MENU = {
   ASISTENCIA_ADMIN_INCIDENTES: ["Asistencia", "Administración", "Incidentes o justificaciones"],
   ASISTENCIA_ADMIN_ZONAS_MOVIL: ["Asistencia", "Administración", "Zonas de marca móvil"],
 
-  // Asistencia -> Aprobaciones
+  // Asistencia > Aprobaciones
   ASISTENCIA_APROB_FUERA_ZONA: ["Asistencia", "Aprobaciones", "Marcas fuera de zona"],
   ASISTENCIA_APROB_SOLICITUDES_COLAB: ["Asistencia", "Aprobaciones", "Solicitudes por colaborador"],
   ASISTENCIA_APROB_MIS_SOLICITUDES: ["Asistencia", "Aprobaciones", "Mis solicitudes"],
@@ -56,12 +56,11 @@ export const RUTAS_MENU = {
   ASISTENCIA_APROB_REVISION_RECHAZADAS: ["Asistencia", "Aprobaciones", "Revisión de marcas rechazadas"],
   ASISTENCIA_APROB_REPORTE_FINAL: ["Asistencia", "Aprobaciones", "Reporte aprobación final"],
 
-  // Asistencia -> Reportes generales
-
+  // Asistencia > Reportes generales
   ASISTENCIA_DIARIO_ASISTENCIA: ["Asistencia", "Reportes generales", "Diario asistencia"],
   ASISTENCIA_MARCAS_RECHAZADAS: ["Asistencia", "Reportes generales", "Revisión de marcas rechazadas"],
 
-  // Asistencia -> Reportes Personalizados
+  // Asistencia > Reportes Personalizados
   ASISTENCIA_REPORTES_TEMPLATE: [
     "Asistencia",
     "Reportes Personalizados",
@@ -69,6 +68,7 @@ export const RUTAS_MENU = {
   ],
   ASISTENCIA_REPORTES_CONSULTA: ["Asistencia", "Reportes Personalizados", "Consulta reportes"],
 } as const;
+
 export type RutaMenu = (typeof RUTAS_MENU)[keyof typeof RUTAS_MENU];
 
 /** Archivos donde se guarda la sesión autenticada (storageState). */
