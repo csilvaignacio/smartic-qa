@@ -16,9 +16,10 @@ test.describe("Marcas rechazadas - Rechazo por marca fuera de turno", { tag: "@r
     test.slow();
 
     await marcasRechazadas.navegar();
-    await marcasRechazadas.seleccionarRangoFechas(
-      datosPrueba.rangoFechas.fechaInicio,
-      datosPrueba.rangoFechas.fechaFin,
+    await marcasRechazadas.filtrarPorColaboradorYFechas(
+      datosPrueba.identificador,
+      datosPrueba.fechaInicio,
+      datosPrueba.fechaFin,
     );
     await marcasRechazadas.panelFiltros.buscar();
     const marca = await marcasRechazadas.obtenerMarcaRechazadaPorMotivo(datosPrueba.motivoRechazo);

@@ -50,10 +50,38 @@ export class MarcasRechazadasPage extends BaseModuloPage {
     });
   }
 
-  async seleccionarRangoFechas(fechaInicio: string, fechaFin: string): Promise<void> {
-    await test.step(`Seleccionar rango de fechas ${fechaInicio} - ${fechaFin}`, async () => {
-      await this.campoFechaInicio.ingresarFecha(fechaInicio);
-      await this.campoFechaFin.ingresarFecha(fechaFin);
+  /** Elige al colaborador desde el panel "Búsqueda grupal". */
+  async seleccionarColaborador(identificador: string): Promise<void> {
+    await test.step(`Seleccionar el colaborador ${identificador} en la búsqueda grupal`, async () => {
+      await this.abrirBusquedaGrupal();
+      await this.busquedaGrupal.buscar(identificador);
+      await this.busquedaGrupal.seleccionarColaborador();
+      await this.busquedaGrupal.cerrar();
+    });
+  }
+
+  async ingresarFechaInicio(fecha: string): Promise<void> {
+    await test.step(`Ingresar fecha de inicio ${fecha}`, async () => {
+      await this.campoFechaInicio.ingresarFecha(fecha);
+    });
+  }
+
+  async ingresarFechaFin(fecha: string): Promise<void> {
+    await test.step(`Ingresar fecha de fin ${fecha}`, async () => {
+      await this.campoFechaFin.ingresarFecha(fecha);
+    });
+  }
+
+  /** Atajo: elige al colaborador y el rango de fechas. No pulsa Buscar: eso lo hace el spec. */
+  async filtrarPorColaboradorYFechas(
+    identificador: string,
+    fechaInicio: string,
+    fechaFin: string,
+  ): Promise<void> {
+    await test.step(`Filtrar por el colaborador ${identificador} entre ${fechaInicio} y ${fechaFin}`, async () => {
+      await this.seleccionarColaborador(identificador);
+      await this.ingresarFechaInicio(fechaInicio);
+      await this.ingresarFechaFin(fechaFin);
     });
   }
 
