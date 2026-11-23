@@ -1,10 +1,10 @@
-import { test, expect } from "@fixtures";
 import datos from "@data/reportes-dt/reporte.asistencia.json";
+import { expect, test } from "@fixtures";
 
 const datosPrueba = datos.cp02;
 
 test.describe("Reporte Asistencia DT - Validación Asistencia Colaborador", { tag: "@regresion" }, () => {
-  test("Asistencia SI con Ausencia vacía", async ({ reporteAsistencia }) => {
+  test("CP02 - Asistencia SI con Ausencia vacía", async ({ reporteAsistencia }) => {
     await reporteAsistencia.navegar();
     await reporteAsistencia.filtrarPorRutYFechas(
       datosPrueba.identificadorColaborador,
@@ -16,9 +16,11 @@ test.describe("Reporte Asistencia DT - Validación Asistencia Colaborador", { ta
 
     const ausencia = await reporteAsistencia.obtenerAusenciaPrimeraAsistencia();
 
-    expect(
-      ausencia,
-      `Se esperaba Ausencia vacía cuando Asistencia = SI, pero se encontró: '${ausencia}'`,
-    ).toBe("");
+    await test.step("Validar que la Ausencia está vacía cuando la Asistencia es SI", () => {
+      expect(
+        ausencia,
+        `Se esperaba Ausencia vacía cuando Asistencia = SI, pero se encontró: '${ausencia}'`,
+      ).toBe("");
+    });
   });
 });
