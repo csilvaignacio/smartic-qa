@@ -79,6 +79,7 @@ test("CP02 - Asistencia SI con Ausencia vacía", async ({ reporteAsistencia }) =
       │
 base.fixture.ts                       menuLateral, menuUsuario, loginPage, seleccionEmpresa, inicioPage
       │
+      ├── modulos/api.fixture.ts            loginClient, apiAutenticada (token por worker)
       ├── modulos/asistencia.fixture.ts     calendarios, fichaColaborador, horarios, marcasRechazadas
       └── modulos/reportes.dt.fixture.ts    reporteAsistencia
                     │

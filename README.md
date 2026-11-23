@@ -54,7 +54,8 @@ src/
 ├── helpers/       Controles genéricos: listas ng-select, fechas, tablas, filtros, paginación
 ├── fixtures/      Entregan los page objects a los tests ({ test, expect } desde @fixtures)
 ├── data/          Datos de prueba en JSON, por módulo: data/<modulo>/<pantalla>.json
-└── utils/         Funciones puras, sin Playwright (fechas, textos)
+├── utils/         Funciones puras, sin Playwright (fechas, textos)
+└── api/           Clientes de la API del backend (por ahora, el login)
 tests/
 ├── setup/         Login único: guarda la sesión que reutilizan todos los specs
 └── e2e/           Specs por módulo y pantalla: e2e/<modulo>/<pantalla>/CPnn-*.spec.ts

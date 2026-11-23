@@ -168,6 +168,7 @@ Siempre con alias, nunca con rutas relativas (`../../`):
 | `@utils/*`                  | `src/utils/`      |
 | `@data/*`                   | `src/data/`       |
 | `@fixtures` y `@fixtures/*` | `src/fixtures/`   |
+| `@api/*`                    | `src/api/`        |
 
 - Los specs importan `test` y `expect` **solo** desde `@fixtures`, nunca desde `@playwright/test`.
 - Page objects, componentes y helpers sí importan desde `@playwright/test`.
