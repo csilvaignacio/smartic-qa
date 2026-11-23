@@ -48,11 +48,13 @@ export default defineConfig({
   },
 
   projects: [
+    // 1) Inicia sesión una sola vez y guarda la sesión en storage/admin.json
     { name: "setup", testMatch: /.*\.setup\.ts/ },
+    // 2) Specs E2E: esperan a "setup" y reutilizan su sesión, por eso no hacen login
     {
       name: "e2e",
       dependencies: ["setup"],
-      testMatch: /tests[\\/](e2e|smoke)[\\/].*\.spec\.ts/,
+      testMatch: /tests[\\/]e2e[\\/].*\.spec\.ts/,
       use: {
         browserName: "chromium",
         storageState: RUTAS_SESION.admin,

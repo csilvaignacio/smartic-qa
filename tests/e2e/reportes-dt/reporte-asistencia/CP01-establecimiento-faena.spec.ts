@@ -1,11 +1,11 @@
-import { test, expect } from "@fixtures";
 import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
-import datos from "@data/reporte.asistencia.json";
+import datos from "@data/reportes-dt/reporte.asistencia.json";
+import { expect, test } from "@fixtures";
 
 const datosPrueba = datos.cp01;
 
 test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag: "@regresion" }, () => {
-  test("Caso feliz: dato de Establecimiento/Faena presente y coincide con Ficha Colaborador", async ({
+  test("CP01 - Establecimiento/Faena del reporte coincide con la Ficha Colaborador", async ({
     reporteAsistencia,
     fichaColaborador,
   }) => {
@@ -20,10 +20,10 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
 
     const estabFaenaEnReporte = await reporteAsistencia.obtenerEstablecimientoFaena();
 
-    await test.step("Validar que el Reporte DT contenga dato de Establecimiento/Faena", () => {
+    await test.step("Validar que el Reporte DT informa un Establecimiento/Faena", () => {
       expect(
         estabFaenaEnReporte,
-        "ERROR DE CONFIGURACIÓN: el Reporte DT no tiene dato en Establecimiento/Faena.",
+        `Se esperaba un Establecimiento/Faena en el Reporte DT del colaborador ${datosPrueba.identificadorColaborador}, pero llegó vacío: revisar su configuración`,
       ).not.toBe("");
     });
 
@@ -33,11 +33,11 @@ test.describe("Reporte Asistencia DT - Validación Establecimiento/Faena", { tag
 
     const estabFaenaEnFicha = await fichaColaborador.localEstabFaena.obtenerAsignado();
 
-    await test.step("Cruzar datos: Establecimiento de Ficha Colaborador vs Reporte DT", () => {
+    await test.step("Validar que la Ficha Colaborador tiene el mismo Establecimiento/Faena del reporte", () => {
       expect(
         estabFaenaEnFicha,
-        `Ficha Colaborador: '${estabFaenaEnFicha}' vs Reporte DT: '${estabFaenaEnReporte}'`,
-      ).toEqual(estabFaenaEnReporte);
+        `Se esperaba en la Ficha Colaborador el Establecimiento/Faena '${estabFaenaEnReporte}' del Reporte DT, pero se encontró '${estabFaenaEnFicha}'`,
+      ).toBe(estabFaenaEnReporte);
     });
   });
 });

@@ -1,4 +1,4 @@
-import datos from "@data/marcas.rechazadas.json";
+import datos from "@data/asistencia/marcas.rechazadas.json";
 import { expect, test } from "@fixtures";
 
 const datosPrueba = datos.cp05;

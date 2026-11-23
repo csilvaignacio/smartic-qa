@@ -1,178 +1,81 @@
-# QA Automation SMARTIC — Playwright + TypeScript
+# QA Automation SMARTIC
 
-Framework de automatización de pruebas E2E para la plataforma SMARTIC de Vigatec.
+Pruebas E2E de la plataforma SMARTIC de Vigatec, con **Playwright + TypeScript**.
 
-## Stack técnico
+> ¿Primera vez en el proyecto? Sigue el [inicio rápido](#inicio-rápido) y después lee [Arquitectura](docs/arquitectura.md) y [Agregar un test](docs/guia-nuevo-test.md).
 
-- **Playwright** — automatización E2E
-- **TypeScript** — lenguaje principal (modo estricto)
-- **Allure 3** + reporte HTML de Playwright + JUnit — reportes
-- **ESLint** (typescript-eslint + eslint-plugin-playwright) y **Prettier** — calidad de código
-- **Husky** + **lint-staged** — validación automática antes de cada commit
-- **GitHub Actions** / Azure DevOps (en migración) — CI/CD
+## Inicio rápido
 
-## Estructura del proyecto
-
-```
-qa-automation-smartic/
-├── src/
-│   ├── config/                       # Configuración global
-│   │   ├── entorno.ts                # ENTORNO: variables de .env.<ambiente>
-│   │   ├── constantes.ts             # TIEMPOS_ESPERA, PESTANAS_*
-│   │   └── rutas.ts                  # RUTAS_MENU, RUTAS_API, RUTAS_SESION: todas las rutas
-│   ├── data/                         # Datos de prueba: un JSON por pantalla, un bloque por caso
-│   │   ├── marcas.rechazadas.json
-│   │   └── reporte.asistencia.json
-│   ├── components/                   # Componentes de UI reutilizables (*.comp.ts)
-│   │   ├── base.comp.ts
-│   │   ├── menu.lateral.comp.ts
-│   │   ├── menu.usuario.comp.ts
-│   │   ├── busqueda.grupal.comp.ts
-│   │   └── ficha-colaborador/        # Pestañas de la Ficha Colaborador
-│   ├── pages/                        # Page Objects (*.page.ts)
-│   │   ├── base.page.ts              # Base de todas las páginas
-│   │   ├── base.modulo.page.ts       # Base de páginas abiertas desde el menú (navegar())
-│   │   ├── login.page.ts
-│   │   ├── seleccion.empresa.page.ts
-│   │   ├── inicio.page.ts
-│   │   └── modulos/
-│   │       ├── asistencia/
-│   │       │   ├── administracion/       # ficha colaborador, calendarios, horarios
-│   │       │   └── reportes-generales/   # marcas rechazadas
-│   │       └── reportes-dt/              # base de reportes DT, reporte asistencia
-│   ├── fixtures/
-│   │   ├── index.ts                  # Punto de entrada único: { test, expect }
-│   │   ├── base.fixture.ts           # Fixtures compartidas por todos los módulos
-│   │   └── modulos/                  # Un archivo de fixtures por módulo
-│   │       ├── asistencia.fixture.ts
-│   │       └── reportes.dt.fixture.ts
-│   ├── helpers/                      # Clases de ayuda sobre controles de la UI (*.helper.ts)
-│   │   ├── selector.lista.helper.ts  # ng-select
-│   │   ├── selector.fecha.helper.ts  # nb-datepicker
-│   │   ├── panel.filtros.helper.ts   # Buscar / Limpiar / Exportar
-│   │   ├── tabla.registros.helper.ts # Lectura de tablas por columna
-│   │   └── paginacion.helper.ts      # Siguiente / Anterior
-│   └── utils/                        # Funciones puras, sin Playwright (*.util.ts)
-│       ├── fecha.util.ts
-│       └── texto.util.ts
-├── tests/
-│   ├── setup/autenticacion.setup.ts  # Login + selección de empresa (guarda la sesión)
-│   └── e2e/                          # Specs agrupados igual que src/pages/modulos
-│       ├── asistencia/marcas-rechazadas/
-│       └── reportes-dt/reporte-asistencia/
-├── storage/                          # (generado) sesión autenticada
-└── reports/                          # (generado) TODOS los reportes y evidencias
-    ├── playwright-report/
-    ├── allure-results/
-    ├── allure-report/
-    ├── junit/
-    └── test-results/                 # trazas, videos y capturas
-```
-
-## Arquitectura de fixtures
-
-```
-@playwright/test
-      │
-base.fixture.ts            → menuLateral, menuUsuario, loginPage, seleccionEmpresa, inicioPage
-      │
-      ├── modulos/asistencia.fixture.ts    → calendarios, fichaColaborador, horarios, marcasRechazadas
-      └── modulos/reportes.dt.fixture.ts   → reporteAsistencia
-                     │
-                index.ts (mergeTests)  → test, expect
-```
-
-- Cada módulo **extiende `base.fixture.ts`**, así todas las fixtures compartidas están disponibles en cualquier módulo.
-- `index.ts` combina todos los módulos con `mergeTests`. Los tests **siempre** importan desde `@fixtures`.
-- Las fixtures solo **crean** el Page Object; la navegación la hace el test con `await pagina.navegar()`. Así un test puede usar varias páginas en el orden que necesite.
-- El proyecto `setup` inicia sesión una vez y guarda la sesión en `storage/admin.json`; los specs la reutilizan y **no hacen login**.
-
-## Convenciones
-
-| Elemento                        | Convención                                       | Ejemplo                                        |
-| ------------------------------- | ------------------------------------------------ | ---------------------------------------------- |
-| Archivos                        | minúsculas, separados por puntos + sufijo        | `ficha.colaborador.page.ts`                    |
-| Sufijos de archivo              | `.page`, `.comp`, `.helper`, `.util`, `.fixture` | `panel.filtros.helper.ts`                      |
-| Carpetas                        | kebab-case en español                            | `reportes-dt`, `ficha-colaborador`             |
-| Specs                           | `CPnn-descripcion.spec.ts`                       | `CP01-establecimiento-faena.spec.ts`           |
-| Clases                          | PascalCase en español + sufijo de tipo           | `FichaColaboradorPage`, `MenuLateralComponent` |
-| Métodos / atributos / variables | camelCase en español, verbos en infinitivo       | `ingresarRut()`, `botonBuscar`                 |
-| Constantes                      | UPPER_CASE en español                            | `RUTAS_MENU`, `TIEMPOS_ESPERA`                 |
-| Tags de tests                   | `{ tag: "@regresion" }`                          | `@regresion`, `@sanity`, `@master`             |
-
-- Métodos que **validan** algo empiezan con `esperar…`, `validar…` o `verificar…` (ESLint los reconoce como aserciones).
-- Los identificadores propios de Playwright (`page`, `test`, `expect`, `use`, `testInfo`) se mantienen en inglés.
-- Los selectores van como atributos `private readonly` del Page Object, nunca en el test.
-- Las importaciones usan siempre alias (`@pages/...`, `@helpers/...`), nunca rutas relativas.
-
-## Estabilidad de las pruebas
-
-El ambiente QA es lento y variable: la misma consulta de un reporte puede tardar 3 s o más de 80 s. Para que eso no produzca fallos intermitentes:
-
-- **Reportes pesados:** el Page Object crea `new PanelFiltros(page, RUTAS_API.<reporte>)`. Con eso `panelFiltros.buscar()` espera la respuesta real del backend y, si el servidor falla, el error lo dice en vez de parecer "sin resultados". Sus specs llevan `test.slow()`.
-- **Filas de resultados:** se ubican por la celda exacta, porque las búsquedas de SMARTIC son por prefijo.
-- **Tablas:** se leen con `TablaRegistros`, que ignora la fila "No se encontraron registros" que aparece mientras cargan.
-- **Fechas:** `SelectorFecha` cierra el calendario emergente y confirma que el valor quedó escrito.
-- **Tiempos de espera:** salen de `TIEMPOS_ESPERA`; no se usan esperas fijas (`waitForTimeout`).
-
-## Instalación
+Necesitas Node 20 o superior, Git y acceso al ambiente QA de SMARTIC.
 
 ```bash
-git clone <url-del-repo>
+git clone <url-del-repo> qa-automation-smartic
 cd qa-automation-smartic
-npm ci                    # instala dependencias y activa los hooks de Husky
-npx playwright install    # instala navegadores
-cp .env.example .env.qa   # completa los valores
+npm ci                            # instala dependencias y activa los hooks de Git
+npx playwright install chromium   # navegador que usa la suite
+cp .env.example .env.qa           # completa los valores: cada variable está explicada en el archivo
+npm run test:qa                   # corre toda la suite en QA
+npm run reporte:playwright        # abre el reporte de la última ejecución
 ```
 
-## Ejecutar tests
+`.env.qa` tiene credenciales: está en `.gitignore` y nunca se sube al repositorio.
 
-```bash
-npm run test:qa            # ambiente QA (carga .env.qa)
-npm run test:dev           # ambiente DEV (carga .env.dev)
-npm run test:qa:headed     # QA con navegador visible
-npm run test:ui            # modo UI de Playwright
-npm run test:regresion     # solo tests con tag @regresion
+## Qué cubre hoy la suite
 
-# un solo spec
-npx playwright test tests/e2e/asistencia/marcas-rechazadas/CP01-rechazo-marca-sin-horario.spec.ts
+| Módulo › pantalla                          | Casos     | Qué valida                                                                                                                                                                                                    |
+| ------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Asistencia › Revisión de marcas rechazadas | CP01–CP05 | Para cada motivo de rechazo (sin horario, sin calendario, sin contrato, fuera de turno, usuario inhabilitado) toma una marca del reporte y confirma el motivo en la Ficha Colaborador, Calendarios y Horarios |
+| Reportes DT › Reporte asistencia           | CP01      | El Establecimiento/Faena del reporte coincide con la Ficha Colaborador                                                                                                                                        |
+| Reportes DT › Reporte asistencia           | CP02      | Si la Asistencia es SI, la Ausencia está vacía                                                                                                                                                                |
+
+## Comandos
+
+| Comando                               | Para qué                                                         |
+| ------------------------------------- | ---------------------------------------------------------------- |
+| `npm run test:qa`                     | Toda la suite en QA (`.env.qa`); `npm test` hace lo mismo        |
+| `npm run test:dev`                    | Toda la suite en DEV (`.env.dev`)                                |
+| `npm run test:headed`                 | Con el navegador visible                                         |
+| `npm run test:ui`                     | Modo UI de Playwright: elegir, ver y depurar tests               |
+| `npm run test:debug`                  | Paso a paso con el inspector de Playwright                       |
+| `npm run test:regresion`              | Solo el tag `@regresion` (también `test:sanity` y `test:master`) |
+| `npx playwright test <ruta-del-spec>` | Un solo spec                                                     |
+| `npm run reporte:playwright`          | Abre el reporte HTML                                             |
+| `npm run reporte:allure`              | Genera y abre el reporte Allure                                  |
+| `npm run limpiar:reportes`            | Borra la carpeta `reports/`                                      |
+| `npm run validar`                     | Typecheck + lint + formato, lo mismo que revisa CI               |
+
+## Mapa del repositorio
+
+```text
+src/
+├── config/        Entorno (ENTORNO), tiempos de espera y rutas del menú y del backend
+├── pages/         Page objects, uno por pantalla (los de módulo en pages/modulos/<modulo>/)
+├── components/    Zonas de pantalla reutilizables: menú lateral, menú de usuario, pestañas
+├── helpers/       Controles genéricos: listas ng-select, fechas, tablas, filtros, paginación
+├── fixtures/      Entregan los page objects a los tests ({ test, expect } desde @fixtures)
+├── data/          Datos de prueba en JSON, por módulo: data/<modulo>/<pantalla>.json
+└── utils/         Funciones puras, sin Playwright (fechas, textos)
+tests/
+├── setup/         Login único: guarda la sesión que reutilizan todos los specs
+└── e2e/           Specs por módulo y pantalla: e2e/<modulo>/<pantalla>/CPnn-*.spec.ts
+docs/              Guías del proyecto
+reports/           (generado) reportes, trazas, videos y capturas
+storage/           (generado) sesión autenticada
 ```
 
-## Reportes
+## Documentación
 
-Todos los reportes quedan en `reports/`.
+| Guía                                                            | Qué encuentras                                                                  |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [Arquitectura](docs/arquitectura.md)                            | Cómo corre la suite y cómo se conectan specs, fixtures, page objects y helpers  |
+| [Agregar un test](docs/guia-nuevo-test.md)                      | Paso a paso con plantillas: un caso nuevo, una pantalla nueva o un módulo nuevo |
+| [Convenciones](docs/convenciones.md)                            | Nombres, verbos, selectores, aserciones y reglas de TypeScript                  |
+| [Particularidades de SMARTIC](docs/particularidades-smartic.md) | Comportamientos de la app que afectan a los tests y errores frecuentes          |
+| [Flujo de trabajo](docs/flujo-de-trabajo.md)                    | Ramas, commits, hooks de Git, CI y pull requests                                |
 
-```bash
-npm run reporte:playwright   # abre el reporte HTML de Playwright
-npm run reporte:allure       # genera y abre el reporte Allure
-npm run limpiar:reportes     # borra la carpeta reports/
-```
+## Stack
 
-## Calidad de código
-
-```bash
-npm run typecheck      # tsc sin emitir
-npm run lint           # ESLint
-npm run lint:fix       # ESLint con autocorrección
-npm run format         # Prettier
-npm run validar        # typecheck + lint + formato (lo mismo que corre en CI)
-```
-
-En cada `git commit`, Husky ejecuta `lint-staged` (ESLint + Prettier sobre los archivos modificados) y el typecheck.
-
-> **Nota:** se usa TypeScript 6.0 porque typescript-eslint aún no soporta TypeScript 7.
-
-## Agregar una página nueva a un módulo existente
-
-1. Crea `src/pages/modulos/<modulo>/<submodulo>/<nombre>.page.ts` heredando de `BaseModuloPage` (o `BaseReporteDTPage` si es un reporte DT).
-2. Declara `protected readonly rutaMenu = RUTAS_MENU.<RUTA>;` . Sobrescribe `esperarVisible()` solo si la pantalla necesita una espera propia (por defecto espera la carga).
-3. Registra la fixture en `src/fixtures/modulos/<modulo>.fixture.ts`.
-4. Agrega los datos de prueba en `src/data/<pantalla>.json` (un bloque por caso: `cp01`, `cp02`).
-5. Crea los tests en `tests/e2e/<modulo>/<pantalla>/` importando `{ test, expect } from "@fixtures"`.
-
-## Agregar un módulo nuevo
-
-1. Crea `src/fixtures/modulos/<modulo>.fixture.ts` extendiendo `test` de `@fixtures/base.fixture`.
-2. Súmalo a `mergeTests(...)` en `src/fixtures/index.ts`.
-3. Crea los Page Objects en `src/pages/modulos/<modulo>/` y los datos en `src/data/<pantalla>.json`.
-4. Crea los tests en `tests/e2e/<modulo>/<pantalla>/`.
+- **Playwright** y **TypeScript** en modo estricto.
+- **Reportes:** HTML de Playwright, Allure 3 y JUnit.
+- **Calidad:** ESLint (typescript-eslint + eslint-plugin-playwright), Prettier, Husky y lint-staged.
+- **CI:** GitHub Actions / Azure DevOps (en migración).
