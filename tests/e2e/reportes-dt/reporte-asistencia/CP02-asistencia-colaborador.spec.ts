@@ -1,5 +1,5 @@
 import { test, expect } from "@fixtures";
-import datos from "@data/reporte.asistencia.json";
+import datos from "@data/reportes-dt/reporte.asistencia.json";
 
 const datosPrueba = datos.cp02;
 

@@ -1,5 +1,5 @@
 import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
-import datos from "@data/marcas.rechazadas.json";
+import datos from "@data/asistencia/marcas.rechazadas.json";
 import { expect, test } from "@fixtures";
 import { estaHoraEnRango } from "@utils/fecha.util";
 

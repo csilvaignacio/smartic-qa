@@ -1,6 +1,6 @@
 import { test, expect } from "@fixtures";
 import { PESTANAS_FICHA_COLABORADOR } from "@config/constantes";
-import datos from "@data/reporte.asistencia.json";
+import datos from "@data/reportes-dt/reporte.asistencia.json";
 
 const datosPrueba = datos.cp01;
 
