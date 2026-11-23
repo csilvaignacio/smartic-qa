@@ -9,8 +9,13 @@ export class SelectorLista {
   // Clases propias de la librería ng-select (estables, no autogeneradas por Angular)
   private readonly etiquetaSeleccionada: Locator;
   private readonly botonLimpiar: Locator;
+  private readonly avisos: Locator;
 
-  constructor(page: Page, id: string) {
+  constructor(
+    page: Page,
+    private readonly id: string,
+  ) {
+    this.avisos = page.locator(".ng-option-disabled");
     this.contenedor = page.locator(`ng-select[id="${id}"]`);
     this.campoBusqueda = this.contenedor.locator("input");
     // Se excluyen los avisos deshabilitados ("cargando", "sin resultados"): también son `option`
@@ -26,12 +31,25 @@ export class SelectorLista {
   async seleccionarPorTexto(texto: string | number): Promise<void> {
     await this.contenedor.click();
 
-    await expect(async () => {
-      await this.campoBusqueda.fill(texto.toString());
-      await expect(this.opciones).toHaveCount(1, { timeout: TIEMPOS_ESPERA.intentoCorto });
-      await this.opciones.click({ timeout: TIEMPOS_ESPERA.intentoCorto });
-      await expect(this.etiquetaSeleccionada).toBeVisible({ timeout: TIEMPOS_ESPERA.intentoCorto });
-    }).toPass({ timeout: TIEMPOS_ESPERA.cargaEdicion });
+    try {
+      await expect(async () => {
+        // Se limpia en cada intento: sin esto el texto se acumula en los reintentos
+        await this.campoBusqueda.clear();
+        await this.campoBusqueda.pressSequentially(texto.toString(), { delay: TIEMPOS_ESPERA.teclado });
+        await expect(this.opciones).toHaveCount(1, { timeout: TIEMPOS_ESPERA.intentoCorto });
+        await this.opciones.click({ timeout: TIEMPOS_ESPERA.intentoCorto });
+        await expect(this.etiquetaSeleccionada).toBeVisible({ timeout: TIEMPOS_ESPERA.intentoCorto });
+      }).toPass({ timeout: TIEMPOS_ESPERA.cargaEdicion });
+    } catch (error) {
+      const cantidad = await this.opciones.count();
+      const avisos = (await this.avisos.allInnerTexts()).map((aviso) => aviso.trim()).filter(Boolean);
+      throw new Error(
+        `No se pudo seleccionar "${texto}" en la lista "${this.id}": ` +
+          `la lista mostró ${cantidad} opciones y los avisos [${avisos.join(" | ")}]. ` +
+          `Verifica que el valor exista en la empresa de COMPANY_ID.`,
+        { cause: error },
+      );
+    }
   }
 
   async obtenerTextoSeleccionado(): Promise<string> {

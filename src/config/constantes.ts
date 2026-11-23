@@ -7,6 +7,8 @@ export const TIEMPOS_ESPERA = {
   busquedaSelector: 15_000,
   /** Cada intento dentro de un `toPass`: corto para reintentar rápido. */
   intentoCorto: 3_000,
+  /** Pausa entre teclas al escribir en las listas `ng-select` (`pressSequentially`). */
+  teclado: 50,
 } as const;
 
 /** Nombres de la barra de pestañas de "Ficha Colaborador". */
