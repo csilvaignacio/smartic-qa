@@ -18,7 +18,8 @@ export class SeleccionEmpresaPage extends BasePage {
   async seleccionarEmpresa(idEmpresa: string): Promise<void> {
     await test.step(`Ingresar a la empresa ${idEmpresa}`, async () => {
       await this.filasTabla
-        .filter({ hasText: idEmpresa })
+        // Celda exacta: con `hasText` el rut 1234567-8 también calzaría con 11234567-8
+        .filter({ has: this.page.getByRole("gridcell", { name: idEmpresa, exact: true }) })
         .getByRole("gridcell")
         .last()
         .getByRole("button")
