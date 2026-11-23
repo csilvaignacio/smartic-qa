@@ -15,10 +15,10 @@ export class SeleccionEmpresaPage extends BasePage {
     await expect(this.tablaResultados).toBeVisible();
   }
 
-  async seleccionarEmpresa(nombreEmpresa: string): Promise<void> {
-    await test.step(`Ingresar a la empresa ${nombreEmpresa}`, async () => {
+  async seleccionarEmpresa(idEmpresa: string): Promise<void> {
+    await test.step(`Ingresar a la empresa ${idEmpresa}`, async () => {
       await this.filasTabla
-        .filter({ hasText: nombreEmpresa })
+        .filter({ hasText: idEmpresa })
         .getByRole("gridcell")
         .last()
         .getByRole("button")

@@ -8,7 +8,7 @@ setup("autenticar y entrar a la empresa", async ({ page, loginPage, seleccionEmp
   await loginPage.iniciarSesion(ENTORNO.admin.usuario, ENTORNO.admin.clave);
 
   await seleccionEmpresa.esperarVisible();
-  await seleccionEmpresa.seleccionarEmpresa(ENTORNO.empresaPorDefecto.nombre);
+  await seleccionEmpresa.seleccionarEmpresa(ENTORNO.empresaPorDefecto.id);
   // Con el menú lateral visible la sesión ya quedó dentro de la empresa
   await menuLateral.esperarVisible();
 

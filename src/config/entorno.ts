@@ -24,6 +24,6 @@ export const ENTORNO = {
     clave: obligatoria("QA_PASSWORD"),
   },
   empresaPorDefecto: {
-    nombre: obligatoria("QA_COMPANY"),
+    id: obligatoria("COMPANY_ID"),
   },
 } as const;
