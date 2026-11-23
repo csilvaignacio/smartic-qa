@@ -2,7 +2,6 @@
 
 ## Ramas
 
-- Nunca se commitea directo en `main`: los cambios llegan solo por Pull Request.
 - Una rama por funcionalidad, con prefijo y nombre descriptivo en español, en minúsculas y con guiones:
 
 | Prefijo     | Para                                                     | Ejemplo                          |
